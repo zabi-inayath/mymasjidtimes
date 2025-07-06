@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import MasjidLoginPage from './components/MasjidComponents/MasjidLoginPage';
 import MasjidSignupPage from './components/MasjidComponents/MasjidSignupPage';
+import MasjidDashboard from './components/MasjidComponents/MasjidDashboard';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
           {/* Masjid route */}
           <Route path="/masjid/login" element={<MasjidLoginPage />} />
           <Route path="/masjid/signup" element={<MasjidSignupPage />} />
-          <Route path="/masjid/dashboard" element={<MasjidSignupPage />} />
+          <Route path="/masjid/dashboard" element={<MasjidDashboard />} />
 
           {/* You can add more routes here */}
           {/* <Route path="/masjid/dashboard" element={<Dashboard />} /> */}
