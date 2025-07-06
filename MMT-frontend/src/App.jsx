@@ -13,9 +13,10 @@ function App() {
           {/* Redirect root to login */}
           <Route path="*" element={<Navigate to="/" replace />} />
 
-          {/* Masjid login route */}
+          {/* Masjid route */}
           <Route path="/masjid/login" element={<MasjidLoginPage />} />
           <Route path="/masjid/signup" element={<MasjidSignupPage />} />
+          <Route path="/masjid/dashboard" element={<MasjidSignupPage />} />
 
           {/* You can add more routes here */}
           {/* <Route path="/masjid/dashboard" element={<Dashboard />} /> */}

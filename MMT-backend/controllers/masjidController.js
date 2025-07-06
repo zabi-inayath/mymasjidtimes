@@ -1,4 +1,6 @@
 const db = require("../config/db");
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.JWT_SECRET;
 
 // GET all masjids
 const getMasjids = async (req, res) => {
@@ -80,7 +82,13 @@ const loginMasjid = async (req, res) => {
         const [rows] = await db.query(sql, [adminUsername, adminPassword]);
 
         if (rows.length > 0) {
-            res.status(200).json({ message: "Login successful", masjid: rows[0] });
+            // Create JWT token with 24 minutes expiry
+            const token = jwt.sign(
+                { id: rows[0].id, adminUsername: rows[0].adminUsername },
+                SECRET,
+                { expiresIn: '24m' }
+            );
+            res.status(200).json({ message: "Login successful", masjid: rows[0], token });
         } else {
             res.status(401).json({ message: "Invalid username or password" });
         }
