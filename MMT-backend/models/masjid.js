@@ -1,4 +1,4 @@
-const pool = require("../config/db"); // Import the pool
+const pool = require("../config/db"); 
 
 const createMasjidTable = `
   CREATE TABLE IF NOT EXISTS masjids (
@@ -11,6 +11,7 @@ const createMasjidTable = `
     asr VARCHAR(50),
     maghrib VARCHAR(50),
     isha VARCHAR(50),
+    jummah VARCHAR(50),
     announcements TEXT,
     adminUsername VARCHAR(255),
     adminPassword VARCHAR(255),
