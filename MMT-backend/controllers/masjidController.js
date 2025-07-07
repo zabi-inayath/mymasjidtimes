@@ -19,61 +19,6 @@ const getMasjids = async (req, res) => {
     }
 }
 
-// SignUp masjid
-const addMasjid = async (req, res) => {
-    const {
-        name,
-        address,
-        town,
-        fajr,
-        dhuhr,
-        asr,
-        maghrib,
-        isha,
-        jummah,
-        announcements,
-        adminUsername,
-        adminPassword,
-        adminEmail,
-        adminPhone,
-    } = req.body;
-
-    try {
-        const sql = `
-      INSERT INTO masjids 
-      (name, address, town, fajr, dhuhr, asr, maghrib, isha, jummah, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-
-        const values = [
-            name,
-            address,
-            town,
-            fajr,
-            dhuhr,
-            asr,
-            maghrib,
-            isha,
-            jummah,
-            announcements,
-            adminUsername,
-            adminPassword,
-            adminEmail,
-            adminPhone,
-        ];
-
-        const [result] = await db.query(sql, values);
-
-        res.status(201).json({
-            message: "Masjid added successfully",
-            masjidId: result.insertId,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error adding masjid." });
-    }
-};
-
 const loginMasjid = async (req, res) => {
     const { adminUsername, adminPassword } = req.body;
 
@@ -98,30 +43,6 @@ const loginMasjid = async (req, res) => {
     }
 };
 
-const getMasjidInfo = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const sql = "SELECT * FROM masjids WHERE id = ?";
-        const [rows] = await db.query(sql, [id]);
-
-        if (rows.length > 0) {
-            // Filter out sensitive information
-            const {
-                adminUsername,
-                adminPassword,
-                adminEmail,
-                adminPhone,
-                ...filteredData
-            } = rows[0];
-            res.status(200).json(filteredData);
-        } else {
-            res.status(404).json({ message: "Masjid not found" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error fetching masjid." });
-    }
-};
 
 const updateMasjidInfo = async (req, res) => {
     const { id } = req.params;
@@ -153,70 +74,171 @@ const updateMasjidInfo = async (req, res) => {
     }
 };
 
-const updateMasjidTimes = async (req, res) => {
-    const { id } = req.params;
-    const updateFields = req.body;
-
-    // Build query dynamically
-    const keys = Object.keys(updateFields);
-    const values = Object.values(updateFields);
-
-    if (keys.length === 0) {
-        return res.status(400).json({ message: "No fields provided to update." });
-    }
-
-    const setClause = keys.map(field => `${field} = ?`).join(', ');
-
-    const sql = `UPDATE masjids SET ${setClause} WHERE id = ?`;
+const addMasjid = async (req, res) => {
+    const {
+        name,
+        address,
+        town,
+        fajr,
+        fajrIqamath,
+        dhuhr,
+        dhuhrIqamath,
+        asr,
+        asrIqamath,
+        maghrib,
+        maghribIqamath,
+        isha,
+        ishaIqamath,
+        jummah,
+        announcements,
+        adminUsername,
+        adminPassword,
+        adminEmail,
+        adminPhone,
+    } = req.body;
 
     try {
-        const [result] = await db.query(sql, [...values, id]);
+        // Fixed SQL query with correct number of placeholders
+        const sql = `
+            INSERT INTO masjids 
+            (name, address, town, fajr, fajrIqamath, dhuhr, dhuhrIqamath, asr, asrIqamath, maghrib, maghribIqamath, isha, ishaIqamath, jummah, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: "Masjid field updated successfully" });
-        } else {
-            res.status(404).json({ message: "Masjid not found" });
-        }
+        const values = [
+            name,
+            address,
+            town,
+            fajr,
+            fajrIqamath,
+            dhuhr,
+            dhuhrIqamath,
+            asr,
+            asrIqamath,
+            maghrib,
+            maghribIqamath,
+            isha,
+            ishaIqamath,
+            jummah,
+            announcements,
+            adminUsername,
+            adminPassword,
+            adminEmail,
+            adminPhone,
+        ];
+
+        const [result] = await db.query(sql, values);
+
+        res.status(201).json({
+            message: "Masjid added successfully",
+            masjidId: result.insertId,
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error updating masjid." });
+        console.error("Error adding masjid:", error);
+        res.status(500).json({ message: "Error adding masjid." });
+    }
+};
+
+const getMasjidInfo = async (req, res) => {
+    try {
+        const masjidId = req.params.id;
+        const sql = `SELECT * FROM masjids WHERE id = ?`;
+        const [result] = await db.query(sql, [masjidId]);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Masjid not found" });
+        }
+
+        res.json(result[0]);
+    } catch (error) {
+        console.error("Error fetching masjid info:", error);
+        res.status(500).json({ message: "Error fetching masjid info" });
+    }
+};
+
+const updateMasjidTimes = async (req, res) => {
+    try {
+        const masjidId = req.params.id;
+        
+        const {
+            fajr,
+            fajrIqamath,
+            zuhar,
+            zuharIqamath,
+            asar,
+            asarIqamath,
+            maghrib,
+            maghribIqamath,
+            isha,
+            ishaIqamath,
+            jummah,
+            jummahIqamath,
+            lastUpdated
+        } = req.body;
+
+        const sql = `
+            UPDATE masjids 
+            SET fajr = ?, fajrIqamath = ?, zuhar = ?, zuharIqamath = ?,
+                asar = ?, asarIqamath = ?, maghrib = ?, maghribIqamath = ?,
+                isha = ?, ishaIqamath = ?, jummah = ?, jummahIqamath = ?,
+                updatedAt = CURRENT_TIMESTAMP
+            WHERE id = ?
+        `;
+
+        const values = [
+            fajr, fajrIqamath, zuhar, zuharIqamath,
+            asar, asarIqamath, maghrib, maghribIqamath,
+            isha, ishaIqamath, jummah, jummahIqamath,
+            masjidId
+        ];
+
+        const [result] = await db.query(sql, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Masjid not found" });
+        }
+
+        res.json({ message: "Prayer times updated successfully" });
+    } catch (error) {
+        console.error("Error updating prayer times:", error);
+        res.status(500).json({ message: "Error updating prayer times" });
     }
 };
 
 const updateAnnouncement = async (req, res) => {
-    const { id } = req.params;
-    const { announcements } = req.body;
-
     try {
-        const sql = "UPDATE masjids SET announcements = ? WHERE id = ?";
-        const [result] = await db.query(sql, [announcements, id]);
+        const masjidId = req.params.id;
+        const { announcements } = req.body;
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: "Announcements updated successfully" });
-        } else {
-            res.status(404).json({ message: "Masjid not found" });
+        const sql = `UPDATE masjids SET announcements = ? WHERE id = ?`;
+        const [result] = await db.query(sql, [announcements, masjidId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Masjid not found" });
         }
+
+        res.json({ message: "Announcement updated successfully" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error updating announcements." });
+        console.error("Error updating announcement:", error);
+        res.status(500).json({ message: "Error updating announcement" });
     }
 };
 
 const removeAnnouncement = async (req, res) => {
-    const { id } = req.params;
-
     try {
-        const sql = "UPDATE masjids SET announcements = NULL WHERE id = ?";
-        const [result] = await db.query(sql, [id]);
+        const masjidId = req.params.id;
 
-        if (result.affectedRows > 0) {
-            res.status(200).json({ message: "Announcement removed successfully" });
-        } else {
-            res.status(404).json({ message: "Masjid not found" });
+        const sql = `UPDATE masjids SET announcements = NULL WHERE id = ?`;
+        const [result] = await db.query(sql, [masjidId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Masjid not found" });
         }
+
+        res.json({ message: "Announcement removed successfully" });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error removing announcement." });
+        console.error("Error removing announcement:", error);
+        res.status(500).json({ message: "Error removing announcement" });
     }
 };
 

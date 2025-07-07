@@ -23,9 +23,10 @@ export default function MasjidLoginPage() {
             const data = await res.json();
             if (res.ok) {
                 toast.success('Login successful!');
-                navigate('/masjid/dashboard'); 
+                navigate('/masjid/dashboard');
                 //store token here
-                localStorage.setItem('masjidToken', data.token); // Assuming the token is returned in the response
+                localStorage.setItem('masjidToken', data.token);
+                localStorage.setItem('masjidID', data.masjid.id)
             } else {
                 toast.error(data.message || 'Login failed.');
             }
@@ -103,12 +104,11 @@ export default function MasjidLoginPage() {
                                 type="button"
                                 onClick={handleLogin}
                                 disabled={loading}
-                                className="w-30 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-3 px-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                                className="w-45 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-3 px-8 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                             >
                                 {loading ? 'Logging in...' : 'LOGIN'}
                             </button>
                         </div>
-                        
                     </div>
                 </div>
             </div>
