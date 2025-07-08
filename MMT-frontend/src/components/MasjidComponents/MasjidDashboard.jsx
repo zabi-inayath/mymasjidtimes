@@ -1,8 +1,86 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { Home, Edit3 } from 'lucide-react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+
+// Memoized EditView component
+const EditView = memo(({
+    prayerTimes,
+    notice,
+    onPrayerTimeChange,
+    onUpdateTimes,
+    onNoticeChange,
+    onNoticeAction
+}) => {
+    return (
+        <div className="max-w-md mx-auto px-4 py-6">
+            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 poppins">Edit Details</h1>
+
+            <div className="bg-yellow-300 rounded-4xl p-6 mb-8">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 dm-sans">UPDATE TIMES</h3>
+                <div className="grid grid-cols-3 gap-2 mb-2">
+                    <div className="font-bold text-gray-800 text-lg dm-sans">Namaz</div>
+                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Azaan</div>
+                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Iqamath</div>
+                </div>
+
+                {prayerTimes.map((prayer, index) => (
+                    <div key={index} className="grid grid-cols-3 gap-2 py-2 items-center poppins">
+                        <div className="font-bold text-gray-800 text-lg">{prayer.name}</div>
+                        <input
+                            type="time"
+                            value={prayer.azaan}
+                            onChange={(e) => onPrayerTimeChange(index, 'azaan', e.target.value)}
+                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
+                            step="300"
+                        />
+                        <input
+                            type="time"
+                            value={prayer.iqamath}
+                            onChange={(e) => onPrayerTimeChange(index, 'iqamath', e.target.value)}
+                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
+                            step="300"
+                        />
+                    </div>
+                ))}
+
+                <button
+                    onClick={onUpdateTimes}
+                    className="dm-sans w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full mt-4 transition-colors"
+                >
+                    UPDATE
+                </button>
+            </div>
+
+            <div className="bg-yellow-300 rounded-4xl p-6 mb-24">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 poppins">Add/Edit Notice</h3>
+                <textarea
+                    value={notice}
+                    onChange={(e) => onNoticeChange(e.target.value)}
+                    placeholder="Enter your notice here..."
+                    className="w-full h-32 bg-yellow-400 rounded-lg p-4 text-gray-800 placeholder-gray-600 resize-none"
+                />
+                <div className="flex gap-4 mt-4">
+                    <button
+                        onClick={() => onNoticeAction('add')}
+                        className="dm-sans flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full transition-colors"
+                    >
+                        SAVE NOTICE
+                    </button>
+                    {notice && (
+                        <button
+                            onClick={() => onNoticeAction('remove')}
+                            className="flex-1 bg-red-400 hover:bg-red-500 text-white font-semibold py-2 rounded-full transition-colors"
+                        >
+                            REMOVE NOTICE
+                        </button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+});
 
 export default function MasjidDashboard() {
     const navigate = useNavigate();
@@ -179,6 +257,19 @@ export default function MasjidDashboard() {
         ));
     }, []);
 
+    const handleNoticeChange = useCallback((value) => {
+        setNotice(value);
+    }, []);
+
+    const formatTime = (date) => {
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        return `${hours}:${minutes} ${ampm}`;
+    };
+
     const formatDateTime = (isoString) => {
         if (!isoString) return 'Not updated yet';
 
@@ -199,20 +290,11 @@ export default function MasjidDashboard() {
 
         // Otherwise return full date
         const dd = String(date.getDate()).padStart(2, '0');
-        const mm = String(date.getDate() + 1).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
         const yyyy = date.getFullYear();
 
         return `${dd}-${mm}-${yyyy} -- ${formatTime(date)}`;
     };
-
-    const formatTime = (date) => {
-        let hours = date.getHours();
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // Convert 0 to 12
-        return `${hours}:${minutes} ${ampm}`;
-      };
 
     useEffect(() => {
         const init = async () => {
@@ -254,92 +336,28 @@ export default function MasjidDashboard() {
             </div>
             <div id="notice-section" className="scroll-mt-20">
                 <h2 className="text-2xl poppins font-bold text-gray-800 text-center mb-6">Current Notice</h2>
-                <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                <div className="bg-yellow-300 rounded-4xl p-8 mb-24 ">
                     <div className="text-center">
-                        <div className="text-lg font-medium text-gray-800 mb-8 dm-sans">
+                        <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
                             {notice || "No Notice/Announcement"}
                         </div>
                         <div className="flex gap-4 justify-center">
                             <button
                                 onClick={() => setCurrentView('edit')}
-                                className="dm-sans bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-6 py-2 rounded-full transition-colors"
+                                className="dm-sans bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-8 py-2 rounded-full transition-colors"
                             >
-                                {notice ? 'EDIT NOTICE' : 'ADD NOTICE'}
+                                {notice ? 'EDIT' : 'ADD NOTICE'}
                             </button>
                             {notice && (
                                 <button
                                     onClick={() => handleNoticeAction('remove')}
-                                    className="bg-red-400 hover:bg-red-500 text-white font-semibold px-6 py-2 rounded-full transition-colors"
+                                    className="dm-sans bg-red-400 hover:bg-red-500 text-white font-semibold px-6 py-2 rounded-full transition-colors"
                                 >
                                     REMOVE NOTICE
                                 </button>
                             )}
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    );
-
-    const EditView = () => (
-        <div className="max-w-md mx-auto px-4 py-6">
-            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 poppins">Edit Details</h1>
-            <div className="bg-yellow-300 rounded-4xl p-6 mb-8">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 dm-sans">UPDATE TIMES</h3>
-                <div className="grid grid-cols-3 gap-2 mb-2">
-                    <div className="font-bold text-gray-800 text-lg dm-sans">Namaz</div>
-                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Azaan</div>
-                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Iqamath</div>
-                </div>
-                {prayerTimes.map((prayer, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-2 py-2 items-center poppins">
-                        <div className="font-bold text-gray-800 text-lg">{prayer.name}</div>
-                        <input
-                            type="time"
-                            value={prayer.azaan}
-                            onChange={(e) => handlePrayerTimeChange(index, 'azaan', e.target.value)}
-                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
-                            step="300"
-                        />
-                        <input
-                            type="time"
-                            value={prayer.iqamath}
-                            onChange={(e) => handlePrayerTimeChange(index, 'iqamath', e.target.value)}
-                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
-                            step="300"
-                        />
-                    </div>
-                ))}
-                <button
-                    onClick={handleUpdateTimes}
-                    className="dm-sans w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full mt-4 transition-colors"
-                >
-                    UPDATE
-                </button>
-            </div>
-            <div className="bg-yellow-300 rounded-4xl p-6 mb-24">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 poppins">Add/Edit Notice</h3>
-                <textarea
-                    value={notice}
-                    onChange={(e) => setNotice(e.target.value)}
-                    placeholder="Enter your notice here..."
-                    className="w-full h-32 bg-yellow-400 rounded-lg p-4 text-gray-800 placeholder-gray-600 resize-none"
-                />
-                <div className="flex gap-4 mt-4">
-                    <button
-                        onClick={() => handleNoticeAction('add')}
-                        className="dm-sans flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full transition-colors"
-                    >
-                        SAVE NOTICE
-                    </button>
-                    {notice && (
-                        <button
-                            onClick={() => handleNoticeAction('remove')}
-                            className="flex-1 bg-red-400 hover:bg-red-500 text-white font-semibold py-2 rounded-full transition-colors"
-                        >
-                            REMOVE NOTICE
-                        </button>
-                    )}
                 </div>
             </div>
         </div>
@@ -382,7 +400,18 @@ export default function MasjidDashboard() {
                     </button>
                 </div>
             </header>
-            {currentView === 'home' ? <HomeView /> : <EditView />}
+            {currentView === 'home' ? (
+                <HomeView />
+            ) : (
+                <EditView
+                    prayerTimes={prayerTimes}
+                    notice={notice}
+                    onPrayerTimeChange={handlePrayerTimeChange}
+                    onUpdateTimes={handleUpdateTimes}
+                    onNoticeChange={handleNoticeChange}
+                    onNoticeAction={handleNoticeAction}
+                />
+            )}
             <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
                 <div className="bg-yellow-400 rounded-full px-8 py-3 flex items-center space-x-6 shadow-lg">
                     <button
