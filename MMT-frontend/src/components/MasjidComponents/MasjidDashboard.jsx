@@ -1,264 +1,274 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Home, Edit3 } from 'lucide-react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function MasjidDashboard() {
     const navigate = useNavigate();
+    const [authChecked, setAuthChecked] = useState(false);
     const [currentView, setCurrentView] = useState('home');
     const [notice, setNotice] = useState('');
     const [masjidName, setMasjidName] = useState('');
-    const [prayerTimes, setPrayerTimes] = useState([
-        { name: 'Fajr', azaan: '04:45', iqamath: '04:45' },
-        { name: 'Zuhar', azaan: '12:45', iqamath: '12:45' },
-        { name: 'Asar', azaan: '15:45', iqamath: '15:45' },
-        { name: 'Maghrib', azaan: '18:45', iqamath: '18:45' },
-        { name: 'Isha', azaan: '20:45', iqamath: '20:45' },
-        { name: 'Jummah', azaan: '13:00', iqamath: '13:00' },
-    ]);
+    const [prayerTimes, setPrayerTimes] = useState([]);
     const [lastUpdate, setLastUpdate] = useState('');
+    const [loading, setLoading] = useState(true);
 
-    // Mock storage for demonstration
-    // const localStorage = {
-    //     getItem: (key) => {
-    //         const mockData = {
-    //             "masjidID": "123",
-    //             "masjidToken": "demo-token"
-    //         };
-    //         return mockData[key] || null;
-    //     },
-    //     removeItem: (key) => {
-    //         console.log(`Removed ${key} from storage`);
-    //     }
-    // };
+    const validateAuth = useCallback(async () => {
+        const masjidId = localStorage.getItem("masjidID");
+        const token = localStorage.getItem("masjidToken");
 
-    const handleLogout = () => {
+        if (!masjidId || !token) {
+            navigate("/masjid/login");
+            toast.error("Unauthorized access");
+            return false;
+        }
+
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/verify-token`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (!response.data.valid) {
+                throw new Error("Invalid token");
+            }
+
+            return true;
+        } catch (err) {
+            localStorage.removeItem("masjidID");
+            localStorage.removeItem("masjidToken");
+            navigate("/masjid/login");
+            return false;
+        }
+    }, [navigate]);
+
+    const fetchMasjidData = useCallback(async () => {
+        const masjidId = localStorage.getItem("masjidID");
+        const token = localStorage.getItem("masjidToken");
+
+        if (!masjidId || !token) {
+            navigate("/masjid/login");
+            return;
+        }
+
+        try {
+            const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/selected/${masjidId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            const masjid = res.data;
+            setMasjidName(masjid.name);
+
+            const updatedPrayerTimes = [
+                { name: "Fajr", azaan: convertTo24Hour(masjid.fajr), iqamath: convertTo24Hour(masjid.fajrIqamath) },
+                { name: "Zuhar", azaan: convertTo24Hour(masjid.zuhar), iqamath: convertTo24Hour(masjid.zuharIqamath) },
+                { name: "Asar", azaan: convertTo24Hour(masjid.asar), iqamath: convertTo24Hour(masjid.asarIqamath) },
+                { name: "Maghrib", azaan: convertTo24Hour(masjid.maghrib), iqamath: convertTo24Hour(masjid.maghribIqamath) },
+                { name: "Isha", azaan: convertTo24Hour(masjid.isha), iqamath: convertTo24Hour(masjid.ishaIqamath) },
+                { name: "Jummah", azaan: convertTo24Hour(masjid.jummah), iqamath: convertTo24Hour(masjid.jummahIqamath) },
+            ];
+
+            setPrayerTimes(updatedPrayerTimes);
+            setNotice(masjid.announcements || '');
+            setLastUpdate(masjid.lastUpdated || new Date().toISOString().slice(0, 10));
+        } catch (err) {
+            if (err.response?.status === 401) {
+                handleLogout();
+            }
+            toast.error("Failed to load masjid data");
+        }
+    }, [navigate]);
+
+    const handleLogout = useCallback(() => {
         localStorage.removeItem("masjidID");
         localStorage.removeItem("masjidToken");
-        navigate("/masjid/login")
-        console.log('Logout clicked');
-    };
+        toast.success("Logout successful!")
+        navigate("/masjid/login");
+    }, [navigate]);
 
-    const scrollToNotice = () => {
-        const noticeElement = document.getElementById('notice-section');
-        if (noticeElement) {
-            noticeElement.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    useEffect(() => {
-        const masjidId = localStorage.getItem("masjidID");
-        const token = localStorage.getItem("masjidToken");
-
-        if (!masjidId || !token) {
-            console.error("Missing masjidID or token");
-            return;
-        }
-
-        axios
-            .get(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/selected/${masjidId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                const masjid = res.data;
-
-                setMasjidName(masjid.name);
-                setPrayerTimes([
-                    {
-                        name: "Fajr",
-                        azaan: masjid.fajr,
-                        iqamath: masjid.fajrIqamath,
-                    },
-                    {
-                        name: "Zuhar",
-                        azaan: masjid.zuhar,
-                        iqamath: masjid.zuharIqamath,
-                    },
-                    {
-                        name: "Asar",
-                        azaan: masjid.asar,
-                        iqamath: masjid.asarIqamath,
-                    },
-                    {
-                        name: "Maghrib",
-                        azaan: masjid.maghrib,
-                        iqamath: masjid.maghribIqamath,
-                    },
-                    {
-                        name: "Isha",
-                        azaan: masjid.isha,
-                        iqamath: masjid.ishaIqamath,
-                    },
-                    {
-                        name: "Jummah",
-                        azaan: masjid.jummah,
-                        iqamath: masjid.jummahIqamath,
-                    },
-                ]);
-                setNotice(masjid.announcements || '');
-                setLastUpdate(masjid.lastUpdated || new Date().toISOString().slice(0, 10));
-            })
-            .catch((err) => {
-                console.error("Error fetching masjid data:", err);
-            });
+    const formatTo12Hour = useCallback((timeStr) => {
+        if (!timeStr || typeof timeStr !== "string" || !timeStr.includes(":")) return "";
+        const [hourStr, minuteStr] = timeStr.split(":");
+        const hour = parseInt(hourStr, 10);
+        const minute = parseInt(minuteStr, 10);
+        if (isNaN(hour) || isNaN(minute)) return "";
+        const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+        return `${formattedHour}:${minute.toString().padStart(2, "0")}`;
     }, []);
 
-    const handleUpdateTimes = () => {
+    const convertTo24Hour = (timeStr) => {
+        if (!timeStr) return "00:00";
+        if (/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(timeStr)) return timeStr;
+
+        const timeParts = timeStr.split(' ');
+        let [hours, minutes] = timeParts[0].split(':');
+        const period = timeParts[1]?.toUpperCase();
+        hours = parseInt(hours, 10);
+        minutes = minutes || "00";
+        if (period === "PM" && hours < 12) hours += 12;
+        if (period === "AM" && hours === 12) hours = 0;
+        return `${hours.toString().padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    };
+
+    const handleUpdateTimes = useCallback(async () => {
         const masjidId = localStorage.getItem("masjidID");
         const token = localStorage.getItem("masjidToken");
 
         if (!masjidId || !token) {
-            console.error("Missing masjidID or token");
+            handleLogout();
             return;
         }
 
-        // Updated payload to match your database schema
-        const payload = {
-            fajr: prayerTimes[0].azaan,
-            fajrIqamath: prayerTimes[0].iqamath,
-            zuhar: prayerTimes[1].azaan,
-            zuharIqamath: prayerTimes[1].iqamath,
-            asar: prayerTimes[2].azaan,
-            asarIqamath: prayerTimes[2].iqamath,
-            maghrib: prayerTimes[3].azaan,
-            maghribIqamath: prayerTimes[3].iqamath,
-            isha: prayerTimes[4].azaan,
-            ishaIqamath: prayerTimes[4].iqamath,
-            jummah: prayerTimes[5].azaan,
-            jummahIqamath: prayerTimes[5].iqamath,
-            lastUpdated: new Date().toISOString().slice(0, 10),
-        };
-        console.log(payload);
-
-        axios
-            .put(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/times`, payload, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+        try {
+            await axios.put(
+                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/times`,
+                {
+                    fajr: prayerTimes[0].azaan,
+                    fajrIqamath: prayerTimes[0].iqamath,
+                    zuhar: prayerTimes[1].azaan,
+                    zuharIqamath: prayerTimes[1].iqamath,
+                    asar: prayerTimes[2].azaan,
+                    asarIqamath: prayerTimes[2].iqamath,
+                    maghrib: prayerTimes[3].azaan,
+                    maghribIqamath: prayerTimes[3].iqamath,
+                    isha: prayerTimes[4].azaan,
+                    ishaIqamath: prayerTimes[4].iqamath,
+                    jummah: prayerTimes[5].azaan,
+                    jummahIqamath: prayerTimes[5].iqamath,
+                    lastUpdated: new Date().toISOString(),
                 },
-            })
-            .then((res) => {
-                console.log("Times updated:", res.data);
-                setLastUpdate(new Date().toISOString().slice(0, 10));
-                setCurrentView("home");
-            })
-            .catch((err) => {
-                console.error("Error updating times:", err);
-            });
-    };
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await fetchMasjidData();
+            setCurrentView("home");
+            toast.success("Times updated successfully");
+        } catch (err) {
+            toast.error("Error updating times");
+            if (err.response?.status === 401) handleLogout();
+        }
+    }, [prayerTimes, fetchMasjidData, handleLogout]);
 
-    const handleAddNotice = () => {
+    const handleNoticeAction = useCallback(async (action) => {
         const masjidId = localStorage.getItem("masjidID");
         const token = localStorage.getItem("masjidToken");
 
         if (!masjidId || !token) {
-            console.error("Missing masjidID or token");
+            handleLogout();
             return;
         }
 
-        axios
-            .post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/addannouncements`,
-                { announcements: notice },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            .then((res) => {
-                console.log("Notice added:", res.data);
-                setCurrentView("home");
-            })
-            .catch((err) => {
-                console.error("Error adding notice:", err);
-            });
-    };
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/${action === 'add' ? 'addannouncements' : 'removeannouncements'}`,
+                action === 'add' ? { announcements: notice } : {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (action === 'remove') setNotice("");
+            setCurrentView("home");
+            toast.success(`Notice ${action === 'add' ? 'saved' : 'removed'} successfully`);
+        } catch (err) {
+            toast.error(`Error ${action === 'add' ? 'saving' : 'removing'} notice`);
+            if (err.response?.status === 401) handleLogout();
+        }
+    }, [notice, handleLogout]);
 
-    const handleRemoveNotice = () => {
-        const masjidId = localStorage.getItem("masjidID");
-        const token = localStorage.getItem("masjidToken");
+    const handlePrayerTimeChange = useCallback((index, field, value) => {
+        setPrayerTimes(prevTimes => prevTimes.map((time, i) =>
+            i === index ? { ...time, [field]: value } : time
+        ));
+    }, []);
 
-        if (!masjidId || !token) {
-            console.error("Missing masjidID or token");
-            return;
+    const formatDateTime = (isoString) => {
+        if (!isoString) return 'Not updated yet';
+
+        const date = new Date(isoString);
+        const now = new Date();
+
+        // Check if same day (Today)
+        if (date.toDateString() === now.toDateString()) {
+            return 'Today - ' + formatTime(date);
         }
 
-        axios
-            .post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/removeannouncements`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            .then((res) => {
-                console.log("Notice removed:", res.data);
-                setNotice("");
-                setCurrentView("home");
-            })
-            .catch((err) => {
-                console.error("Error removing notice:", err);
-            });
+        // Check if yesterday
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (date.toDateString() === yesterday.toDateString()) {
+            return 'Yesterday - ' + formatTime(date);
+        }
+
+        // Otherwise return full date
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getDate() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+
+        return `${dd}-${mm}-${yyyy} -- ${formatTime(date)}`;
     };
 
+    const formatTime = (date) => {
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        return `${hours}:${minutes} ${ampm}`;
+      };
 
-    // Home View Component
+    useEffect(() => {
+        const init = async () => {
+            const isValid = await validateAuth();
+            if (isValid) {
+                await fetchMasjidData();
+                setAuthChecked(true);
+            }
+            setLoading(false);
+        };
+        init();
+    }, [validateAuth, fetchMasjidData]);
+
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    }
+
+    if (!authChecked) return null;
+
     const HomeView = () => (
         <div className="max-w-md mx-auto px-4 py-6">
-            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-                Current Timing
-            </h1>
-
-            {/* Prayer Times Card */}
+            <h1 className="text-2xl poppins font-bold text-gray-800 text-center mb-6">Current Timing</h1>
             <div className="bg-yellow-300 rounded-4xl px-8 py-8 mb-8">
-                {/* Table Header */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                    <div className="font-bold text-gray-800 text-lg">NAMAZ</div>
-                    <div className="font-bold text-gray-800 text-lg text-center">AZAAN</div>
-                    <div className="font-bold text-gray-800 text-lg text-center">IQAMATH</div>
+                    <div className="font-extrabold text-indigo-900 text-lg dm-sans">NAMAZ</div>
+                    <div className="font-bold text-indigo-900 text-lg text-center dm-sans">AZAAN</div>
+                    <div className="font-bold text-indigo-900 text-lg text-center dm-sans">IQAMATH</div>
                 </div>
-
-                {/* Prayer Times Rows */}
                 {prayerTimes.map((prayer, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-3 py-2">
-                        <div className="font-medium text-gray-800 text-lg">{prayer.name}</div>
-                        <div className="font-bold text-gray-800 text-xl text-center">{prayer.azaan}</div>
-                        <div className="font-bold text-gray-800 text-xl text-center">{prayer.iqamath}</div>
+                    <div key={index} className="grid grid-cols-3 gap-3 py-2 poppins">
+                        <div className="font-extrabold text-gray-800 text-lg dm-sans">{prayer.name}</div>
+                        <div className="font-bold text-gray-800 text-xl text-center">{formatTo12Hour(prayer.azaan)}</div>
+                        <div className="font-bold text-gray-800 text-xl text-center">{formatTo12Hour(prayer.iqamath)}</div>
                     </div>
                 ))}
-
-                {/* Last Update */}
-                <div className="text-center text-lg text-gray-700 mt-6">
-                    Last update: {lastUpdate || '05-07-2025'}
+                <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
+                    Updated on: {formatDateTime(lastUpdate)}
                 </div>
             </div>
-
-            {/* Notice Section */}
             <div id="notice-section" className="scroll-mt-20">
-                <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
-                    Current Notice
-                </h2>
-
+                <h2 className="text-2xl poppins font-bold text-gray-800 text-center mb-6">Current Notice</h2>
                 <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
                     <div className="text-center">
-                        <div className="text-lg font-medium text-gray-800 mb-8">
+                        <div className="text-lg font-medium text-gray-800 mb-8 dm-sans">
                             {notice || "No Notice/Announcement"}
                         </div>
-
                         <div className="flex gap-4 justify-center">
                             <button
                                 onClick={() => setCurrentView('edit')}
-                                className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-6 py-2 rounded-full transition-colors"
+                                className="dm-sans bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold px-6 py-2 rounded-full transition-colors"
                             >
                                 {notice ? 'EDIT NOTICE' : 'ADD NOTICE'}
                             </button>
                             {notice && (
                                 <button
-                                    onClick={handleRemoveNotice}
+                                    onClick={() => handleNoticeAction('remove')}
                                     className="bg-red-400 hover:bg-red-500 text-white font-semibold px-6 py-2 rounded-full transition-colors"
                                 >
                                     REMOVE NOTICE
@@ -271,78 +281,60 @@ export default function MasjidDashboard() {
         </div>
     );
 
-    // Edit View Component
     const EditView = () => (
         <div className="max-w-md mx-auto px-4 py-6">
-            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-                Edit Details
-            </h1>
-
-            {/* Edit Prayer Times */}
+            <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 poppins">Edit Details</h1>
             <div className="bg-yellow-300 rounded-4xl p-6 mb-8">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Prayer Times</h3>
-
+                <h3 className="text-lg font-bold text-gray-800 mb-4 dm-sans">UPDATE TIMES</h3>
                 <div className="grid grid-cols-3 gap-2 mb-2">
-                    <div className="font-medium text-gray-800 text-sm">Prayer</div>
-                    <div className="font-medium text-gray-800 text-sm text-center">Azaan</div>
-                    <div className="font-medium text-gray-800 text-sm text-center">Iqamath</div>
+                    <div className="font-bold text-gray-800 text-lg dm-sans">Namaz</div>
+                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Azaan</div>
+                    <div className="font-bold text-gray-800 text-lg text-center dm-sans">Iqamath</div>
                 </div>
-
                 {prayerTimes.map((prayer, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-2 py-2 items-center">
-                        <div className="font-medium text-gray-800 text-sm">{prayer.name}</div>
+                    <div key={index} className="grid grid-cols-3 gap-2 py-2 items-center poppins">
+                        <div className="font-bold text-gray-800 text-lg">{prayer.name}</div>
                         <input
                             type="time"
                             value={prayer.azaan}
-                            onChange={(e) => {
-                                const newTimes = [...prayerTimes];
-                                newTimes[index].azaan = e.target.value;
-                                setPrayerTimes(newTimes);
-                            }}
+                            onChange={(e) => handlePrayerTimeChange(index, 'azaan', e.target.value)}
                             className="bg-yellow-400 rounded px-2 py-1 text-sm"
+                            step="300"
                         />
                         <input
                             type="time"
                             value={prayer.iqamath}
-                            onChange={(e) => {
-                                const newTimes = [...prayerTimes];
-                                newTimes[index].iqamath = e.target.value;
-                                setPrayerTimes(newTimes);
-                            }}
+                            onChange={(e) => handlePrayerTimeChange(index, 'iqamath', e.target.value)}
                             className="bg-yellow-400 rounded px-2 py-1 text-sm"
+                            step="300"
                         />
                     </div>
                 ))}
-
                 <button
                     onClick={handleUpdateTimes}
-                    className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full mt-4 transition-colors"
+                    className="dm-sans w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full mt-4 transition-colors"
                 >
-                    UPDATE TIMES
+                    UPDATE
                 </button>
             </div>
-
-            {/* Edit Notice */}
             <div className="bg-yellow-300 rounded-4xl p-6 mb-24">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Add/Edit Notice</h3>
-
+                <h3 className="text-lg font-bold text-gray-800 mb-4 poppins">Add/Edit Notice</h3>
                 <textarea
                     value={notice}
                     onChange={(e) => setNotice(e.target.value)}
                     placeholder="Enter your notice here..."
                     className="w-full h-32 bg-yellow-400 rounded-lg p-4 text-gray-800 placeholder-gray-600 resize-none"
                 />
-
                 <div className="flex gap-4 mt-4">
                     <button
-                        onClick={handleAddNotice}
-                        className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full transition-colors"
+                        onClick={() => handleNoticeAction('add')}
+                        className="dm-sans flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 rounded-full transition-colors"
                     >
                         SAVE NOTICE
                     </button>
                     {notice && (
                         <button
-                            onClick={handleRemoveNotice}
+                            onClick={() => handleNoticeAction('remove')}
                             className="flex-1 bg-red-400 hover:bg-red-500 text-white font-semibold py-2 rounded-full transition-colors"
                         >
                             REMOVE NOTICE
@@ -355,49 +347,53 @@ export default function MasjidDashboard() {
 
     return (
         <div className="min-h-screen bg-orange-50">
-            {/* Header */}
             <header className="bg-white shadow-sm">
                 <div className="max-w-md mx-auto px-4 py-0 flex items-center justify-between">
-                    {/* Logo and Title */}
                     <div className="flex items-center space-x-3">
                         <div>
                             <img className="w-20 h-20" src='/myMasjidTimes_Logo.png' alt="Logo" />
                         </div>
                         <div>
-                            <div className="text-xs text-gray-600">myMasjidTimes</div>
-                            <div className="text-sm font-semibold text-gray-800">
+                            <div className="text-sm text-black hagrid mb-1">myMasjidTimes</div>
+                            <div className="text-sm font-semibold poppins text-gray-800">
                                 {masjidName || 'Loading...'}
                             </div>
                         </div>
                     </div>
-
-                    {/* Logout Button */}
                     <button
                         onClick={handleLogout}
-                        className="bg-red-300 hover:bg-red-400 text-red-800 text-xs font-medium px-3 py-1 rounded-full transition-colors"
+                        className="flex items-center justify-center gap-2 bg-yellow-400 text-white text-sm font-semibold px-4 py-2 rounded-xl shadow-sm hover:bg-red-500 hover:text-white active:bg-red-500 transition-colors duration-300"
                     >
-                        LOGOUT
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                        Logout
                     </button>
                 </div>
             </header>
-
-            {/* Main Content */}
             {currentView === 'home' ? <HomeView /> : <EditView />}
-
-            {/* Bottom Navigation */}
             <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
                 <div className="bg-yellow-400 rounded-full px-8 py-3 flex items-center space-x-6 shadow-lg">
                     <button
                         onClick={() => setCurrentView('home')}
-                        className={`p-2 rounded-full transition-colors ${currentView === 'home' ? 'bg-yellow-500' : 'hover:bg-yellow-500'
-                            }`}
+                        className={`p-2 rounded-full transition-colors ${currentView === 'home' ? 'bg-yellow-500' : 'hover:bg-yellow-500'}`}
                     >
                         <Home size={24} className="text-gray-800" />
                     </button>
                     <button
                         onClick={() => setCurrentView('edit')}
-                        className={`p-2 rounded-full transition-colors ${currentView === 'edit' ? 'bg-yellow-500' : 'hover:bg-yellow-500'
-                            }`}
+                        className={`p-2 rounded-full transition-colors ${currentView === 'edit' ? 'bg-yellow-500' : 'hover:bg-yellow-500'}`}
                     >
                         <Edit3 size={24} className="text-gray-800" />
                     </button>

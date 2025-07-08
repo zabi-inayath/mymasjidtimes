@@ -195,6 +195,7 @@ export default function MasjidSignupPage() {
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 bg-yellow-400 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600"
                                 placeholder="User ID (lowercase)"
+                                maxLength={15}
                             />
                             {errors.adminUsername && (
                                 <div className="text-red-600 text-xs mt-1">{errors.adminUsername}</div>
@@ -216,12 +217,12 @@ export default function MasjidSignupPage() {
                                 <div className="text-red-600 text-xs mt-1">{errors.adminPassword}</div>
                             )}
                         </div>
-                        <div className="pt-4 justify-center flex">
+                        <div className="pt-8 justify-center flex">
                             <button
                                 type="button"
                                 onClick={handleSignup}
                                 disabled={loading}
-                                className="w-30 poppins bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-3 px-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                                className="w-45 poppins bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-3 px-6 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                             >
                                 {loading ? 'Signing Up...' : 'SignUp'}
                             </button>

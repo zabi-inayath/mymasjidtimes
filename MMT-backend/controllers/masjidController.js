@@ -27,22 +27,54 @@ const loginMasjid = async (req, res) => {
         const [rows] = await db.query(sql, [adminUsername, adminPassword]);
 
         if (rows.length > 0) {
-            // Create JWT token with 24 minutes expiry
+            const masjid = rows[0];
+            // Include essential data in the token
             const token = jwt.sign(
-                { id: rows[0].id, adminUsername: rows[0].adminUsername },
+                {
+                    id: masjid.id,
+                    adminUsername: masjid.adminUsername,
+                    masjidName: masjid.name,
+                    iat: Math.floor(Date.now() / 1000) // issued at
+                },
                 SECRET,
-                { expiresIn: '24m' }
+                { expiresIn: '24m' } // Extended to 24 hours for better UX
             );
-            res.status(200).json({ message: "Login successful", masjid: rows[0], token });
+
+            res.status(200).json({
+                message: "Login successful",
+                masjid: {
+                    id: masjid.id,
+                    name: masjid.name
+                },
+                token
+            });
         } else {
-            res.status(401).json({ message: "Invalid username or password" });
+            res.status(401).json({ message: "Invalid credentials" });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Error logging in." });
+        res.status(500).json({ message: "Authentication error" });
     }
 };
 
+const verifyMasjidToken = async (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, SECRET);
+        req.masjid = decoded;
+        next();
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: "Token expired" });
+        }
+        return res.status(403).json({ message: "Invalid token" });
+    }
+};
 
 const updateMasjidInfo = async (req, res) => {
     const { id } = req.params;
@@ -74,22 +106,23 @@ const updateMasjidInfo = async (req, res) => {
     }
 };
 
-const addMasjid = async (req, res) => {
+const addNewMasjid = async (req, res) => {
     const {
         name,
         address,
         town,
         fajr,
         fajrIqamath,
-        dhuhr,
-        dhuhrIqamath,
-        asr,
-        asrIqamath,
+        zuhar,
+        zuharIqamath,
+        asar,
+        asarIqamath,
         maghrib,
         maghribIqamath,
         isha,
         ishaIqamath,
         jummah,
+        jummahIqamath,
         announcements,
         adminUsername,
         adminPassword,
@@ -101,8 +134,8 @@ const addMasjid = async (req, res) => {
         // Fixed SQL query with correct number of placeholders
         const sql = `
             INSERT INTO masjids 
-            (name, address, town, fajr, fajrIqamath, dhuhr, dhuhrIqamath, asr, asrIqamath, maghrib, maghribIqamath, isha, ishaIqamath, jummah, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (name, address, town, fajr, fajrIqamath, zuhar, zuharIqamath, asar, asarIqamath, maghrib, maghribIqamath, isha, ishaIqamath, jummah, jummahIqamath, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
@@ -111,15 +144,16 @@ const addMasjid = async (req, res) => {
             town,
             fajr,
             fajrIqamath,
-            dhuhr,
-            dhuhrIqamath,
-            asr,
-            asrIqamath,
+            zuhar,
+            zuharIqamath,
+            asar,
+            asarIqamath,
             maghrib,
             maghribIqamath,
             isha,
             ishaIqamath,
             jummah,
+            jummahIqamath,
             announcements,
             adminUsername,
             adminPassword,
@@ -159,7 +193,7 @@ const getMasjidInfo = async (req, res) => {
 const updateMasjidTimes = async (req, res) => {
     try {
         const masjidId = req.params.id;
-        
+
         const {
             fajr,
             fajrIqamath,
@@ -244,8 +278,9 @@ const removeAnnouncement = async (req, res) => {
 
 module.exports = {
     getMasjids,
-    addMasjid,
+    addNewMasjid,
     loginMasjid,
+    verifyMasjidToken,
     getMasjidInfo,
     updateMasjidInfo,
     updateMasjidTimes,
