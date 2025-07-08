@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import MasjidLoginPage from './components/MasjidComponents/MasjidLoginPage';
 import MasjidSignupPage from './components/MasjidComponents/MasjidSignupPage';
 import MasjidDashboard from './components/MasjidComponents/MasjidDashboard';
+import AppHome from './components/UserComponents/AppHome';
 
 function App() {
   return (
@@ -19,8 +20,8 @@ function App() {
           <Route path="/masjid/signup" element={<MasjidSignupPage />} />
           <Route path="/masjid/dashboard" element={<MasjidDashboard />} />
 
-          {/* You can add more routes here */}
-          {/* <Route path="/masjid/dashboard" element={<Dashboard />} /> */}
+          {/* User routes */}
+          <Route path="/home" element={<AppHome />} />
           {/* <Route path="/masjid/settings" element={<Settings />} /> */}
 
           {/* 404 - Not found route */}

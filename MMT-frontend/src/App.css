@@ -12,6 +12,10 @@
     font-family: 'DM Sans', sans-serif;
 }
 
+.league-spartan {
+    font-family: 'LeagueSpartan', sans-serif;
+}
+
 @font-face {
     font-family: 'Hagrid';
     src: url('/fonts/Hagrid-Regular-trial.ttf') format('truetype');
@@ -30,6 +34,13 @@
 @font-face {
     font-family: 'DM Sans';
     src: url('/fonts/DMSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LeagueSpartan';
+    src: url('/fonts/LeagueSpartan-Bold.otf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
