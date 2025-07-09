@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import { Star } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MasjidListPage = () => {
     const [masjids, setMasjids] = useState([]);
     const [favorites, setFavorites] = useState([]);
+    const navigate = useNavigate();
 
-    // Fetch all masjids
     useEffect(() => {
         const fetchMasjids = async () => {
             try {
@@ -18,14 +19,12 @@ const MasjidListPage = () => {
             }
         };
 
-        // Load favorites from localStorage
         const savedFavorites = JSON.parse(localStorage.getItem('favoriteMasjids')) || [];
         setFavorites(savedFavorites);
 
         fetchMasjids();
     }, []);
 
-    // Toggle favorite
     const toggleFavorite = (id) => {
         let updatedFavorites;
         if (favorites.includes(id)) {
@@ -38,11 +37,14 @@ const MasjidListPage = () => {
         localStorage.setItem('favoriteMasjids', JSON.stringify(updatedFavorites));
     };
 
+    const goToMasjidTiming = (id) => {
+        navigate(`/masjid-timing/${id}`);
+    };
+
     return (
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
 
-            {/* Masjid List */}
             <div className="flex-1 px-4 py-6">
                 <h1 className="text-2xl ml-2 font-bold text-black mb-8 poppins">Masjids in Vaniyambadi</h1>
 
@@ -50,7 +52,8 @@ const MasjidListPage = () => {
                     {masjids.map((masjid) => (
                         <div
                             key={masjid.id}
-                            className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans"
+                            className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans cursor-pointer"
+                            onClick={() => goToMasjidTiming(masjid.id)}
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 flex items-center justify-center">
@@ -62,8 +65,11 @@ const MasjidListPage = () => {
                                 </div>
                             </div>
                             <div
-                                className="w-6 h-6 flex items-center justify-center cursor-pointer"
-                                onClick={() => toggleFavorite(masjid.id)}
+                                className="w-6 h-6 flex items-center justify-center"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFavorite(masjid.id);
+                                }}
                             >
                                 <Star
                                     className={favorites.includes(masjid.id) ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}

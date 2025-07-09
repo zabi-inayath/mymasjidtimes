@@ -6,6 +6,7 @@ import MasjidLoginPage from './components/MasjidComponents/MasjidLoginPage';
 import MasjidSignupPage from './components/MasjidComponents/MasjidSignupPage';
 import MasjidDashboard from './components/MasjidComponents/MasjidDashboard';
 import AppHome from './components/UserComponents/AppHome';
+import PrayerTimesPage from './components/UserComponents/PrayerTimesPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
 
           {/* User routes */}
           <Route path="/home" element={<AppHome />} />
+          <Route path="/masjid-timing/:id" element={<PrayerTimesPage />} />
           {/* <Route path="/masjid/settings" element={<Settings />} /> */}
 
           {/* 404 - Not found route */}

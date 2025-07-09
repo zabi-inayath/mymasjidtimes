@@ -174,20 +174,40 @@ const addNewMasjid = async (req, res) => {
 };
 
 const getMasjidInfo = async (req, res) => {
-    try {
-        const masjidId = req.params.id;
-        const sql = `SELECT * FROM masjids WHERE id = ?`;
-        const [result] = await db.query(sql, [masjidId]);
+  try {
+    const masjidId = req.params.id;
+    const sql = `
+      SELECT
+        name,
+        address,
+        town,
+        fajr,
+        fajrIqamath,
+        zuhar,
+        zuharIqamath,
+        asar,
+        asarIqamath,
+        maghrib,
+        maghribIqamath,
+        isha,
+        ishaIqamath,
+        jummah,
+        jummahIqamath
+      FROM masjids
+      WHERE id = ?
+    `;
 
-        if (result.length === 0) {
-            return res.status(404).json({ message: "Masjid not found" });
-        }
+    const [result] = await db.query(sql, [masjidId]);
 
-        res.json(result[0]);
-    } catch (error) {
-        console.error("Error fetching masjid info:", error);
-        res.status(500).json({ message: "Error fetching masjid info" });
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Masjid not found" });
     }
+
+    res.json(result[0]);
+  } catch (error) {
+    console.error("Error fetching masjid info:", error);
+    res.status(500).json({ message: "Error fetching masjid info" });
+  }
 };
 
 const updateMasjidTimes = async (req, res) => {
