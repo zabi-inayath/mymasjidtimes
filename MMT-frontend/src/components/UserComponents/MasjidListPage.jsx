@@ -11,7 +11,7 @@ const MasjidListPage = () => (
             <h1 className="text-2xl ml-2 font-bold text-black mb-8 poppins">Masjids in Vaniyambadi</h1>
 
             <div className="space-y-4 mb-30">
-                <div className="bg-[#ffdd79] p-4 rounded-2xl flex items-center justify-between dm-sans">
+                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
                     <div className="flex items-center gap-3">
                         <div className="w-12 h-12 flex items-center justify-center">
                             <img src='/Masjid_list_logo.png' />

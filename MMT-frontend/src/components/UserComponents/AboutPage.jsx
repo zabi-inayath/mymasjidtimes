@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import { CodeXml} from 'lucide-react';
+import { CodeXml } from 'lucide-react';
 
 const AboutPage = () => (
     <div className="min-h-screen bg-[#fef9ef] flex flex-col">
@@ -27,7 +27,7 @@ const AboutPage = () => (
 
             <h2 className="text-3xl font-bold text-black  mb-8 ml-2 poppins">Meet Developer</h2>
             <div className="text-center">
-                <div className="bg-gray-600 p-4 rounded-2xl flex gap-2 items-center justify-between dm-sans">
+                <div className="bg-gray-600 mb-8 p-4 rounded-2xl flex gap-2 items-center justify-between dm-sans">
                     <div className="flex items-center gap-3">
                         <div className="w-16 h-16 flex items-center justify-center">
                             <img className='rounded-4xl size-15' src='/dev_profile.png' />
@@ -45,19 +45,49 @@ const AboutPage = () => (
                                 <Instagram />
                                 <Globe /> */}
                             </div>
-                            
+
                         </div>
                     </div>
                     <div className="w-12 h-12 flex items-center justify-center mr-2">
-                        <CodeXml className='h-8 w-8 text-white'/>
+                        <CodeXml className='h-8 w-8 text-white' />
                     </div>
                 </div>
-                <p className="text-black mb-2">
-                    We welcome your feedback, suggestions, or collaboration ideas!
-                </p>
-                <p className="text-black font-medium">
-                    mymasjidtimes@gmail.com
-                </p>
+
+                <h2 className="text-3xl text-left font-bold text-black  mb-8 ml-2 poppins">Contact</h2>
+
+                <div className="bg-yellow-200 p-6 rounded-2xl mb-8">
+                    <p className="text-black text-left text-2xl dm-sans leading-relaxed">
+                        We welcome your feedback, suggestions, or collaboration ideas!
+                    </p>
+                    <br />
+                    <p className="text-black text-left text-xl dm-sans text-center leading-relaxed">
+                        mymasjidtimes@gmail.com
+                    </p>
+
+                    <form className="mt-6 space-y-4">
+                        <input
+                            type="text"
+                            placeholder="Your Name"
+                            className="w-full px-4 py-2 rounded-lg bg-white text-gray-700 border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        />
+                        <input
+                            type="tel"
+                            placeholder="Phone Number"
+                            className="w-full px-4 py-2 rounded-lg bg-white text-gray-700 border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        />
+                        <textarea
+                            placeholder="Your Message"
+                            rows={4}
+                            className="w-full px-4 py-2 rounded-lg bg-white text-gray-700 border border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
+                        ></textarea>
+                        <button
+                            type="submit"
+                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-xl transition-colors duration-300"
+                        >
+                            Submit Feedback
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

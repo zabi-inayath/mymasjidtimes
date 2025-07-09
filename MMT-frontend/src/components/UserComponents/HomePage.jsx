@@ -27,7 +27,7 @@ const HomePage = () => (
 
             {/* Zohar in Vaniyambadi */}
             <h3 className="text-2xl text-black mb-4 ml-2 league-spartan">Zohar in Vaniyambadi</h3>
-            <div className="bg-[#ffdd79] p-4 rounded-2xl mb-40">
+            <div className="bg-yellow-200 p-4 rounded-2xl mb-40">
                 <div className="space-y-3">
                     <div className="flex justify-between items-center text-lg">
                         <span className="text-black font-medium poppins">Masjid e Mubarak</span>
