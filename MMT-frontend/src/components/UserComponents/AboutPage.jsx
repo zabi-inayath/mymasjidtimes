@@ -10,17 +10,17 @@ const AboutPage = () => (
         <div className="flex-1 px-4 py-6 mb-30">
             <h1 className="text-3xl font-bold text-black mb-8 ml-2 poppins">About <span className='hagrid text-2xl'>myMasjidTimes</span> </h1>
 
-            <div className="bg-yellow-200 p-6 rounded-2xl mb-8">
-                <p className="text-black text-center leading-relaxed">
-                    <span className='hagrid'>myMasjidTimes</span> is a web app that helps Muslims easily access prayer times for all local masjids, ensuring they never miss praying in congregation jamath. It also guides users to the nearest masjid with an upcoming jamath if they're unsure where to go. <br /><br /> Additionally, the app allows users to stay updated with masjid announcements, access Quran tafseer sessions, and view scheduled bayans—keeping them connected to their local Muslim community.
+            <div className="bg-yellow-200 p-6 rounded-2xl mb-8 text-left dm-sans font-medium">
+                <p className="text-black leading-relaxed">
+                    <span className='hagrid text-lg font-semibold'>myMasjidTimes</span> is a web app that helps Muslims easily access prayer times for all local masjids, ensuring they never miss praying in congregation jamath. It also guides users to the nearest masjid with an upcoming jamath if they're unsure where to go. <br /><br /> Additionally, the app allows users to stay updated with masjid announcements, access Quran tafseer sessions, and view scheduled bayans—keeping them connected to their local Muslim community.
                 </p>
                 <br />
-                <p className="text-black text-center leading-relaxed">
+                <p className="text-black leading-relaxed">
                     We're starting in Vaniyambadi, but in sha' Allah, we aim to grow and serve
                     many more cities in the future!
                 </p>
                 <br />
-                <p className="text-black text-center text-sm font-bold">
+                <p className="text-black text-center text-sm league-spartan">
                     Developed with love by <a className='underline hover:text-yellow-800' href='https://instagram.com/zabi_inayath'>zabi_inayath</a>
                 </p>
             </div>
