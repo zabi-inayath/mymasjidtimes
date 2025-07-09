@@ -1,123 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import { Star } from 'lucide-react';
+import axios from 'axios';
 
-const MasjidListPage = () => (
-    <div className="min-h-screen bg-[#fef9ef] flex flex-col">
-        <Header />
+const MasjidListPage = () => {
+    const [masjids, setMasjids] = useState([]);
+    const [favorites, setFavorites] = useState([]);
 
-        {/* Masjid List */}
-        <div className="flex-1 px-4 py-6">
-            <h1 className="text-2xl ml-2 font-bold text-black mb-8 poppins">Masjids in Vaniyambadi</h1>
+    // Fetch all masjids
+    useEffect(() => {
+        const fetchMasjids = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/allmasjids`);
+                setMasjids(res.data || []);
+            } catch (error) {
+                console.error("Failed to load masjid list", error);
+            }
+        };
 
-            <div className="space-y-4 mb-30">
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Khaderpet</h3>
-                            <p className="text-sm text-black">Khaderpet, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+        // Load favorites from localStorage
+        const savedFavorites = JSON.parse(localStorage.getItem('favoriteMasjids')) || [];
+        setFavorites(savedFavorites);
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Kareemabad</h3>
-                            <p className="text-sm text-black">Kareemabad, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+        fetchMasjids();
+    }, []);
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Fatah</h3>
-                            <p className="text-sm text-black">Fari, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+    // Toggle favorite
+    const toggleFavorite = (id) => {
+        let updatedFavorites;
+        if (favorites.includes(id)) {
+            updatedFavorites = favorites.filter(fav => fav !== id);
+        } else {
+            updatedFavorites = [...favorites, id];
+        }
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Khaderpet</h3>
-                            <p className="text-sm text-black">Khaderpet, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+        setFavorites(updatedFavorites);
+        localStorage.setItem('favoriteMasjids', JSON.stringify(updatedFavorites));
+    };
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Taqwa</h3>
-                            <p className="text-sm text-black">Basheerbagh, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+    return (
+        <div className="min-h-screen bg-[#fef9ef] flex flex-col">
+            <Header />
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Jadeed</h3>
-                            <p className="text-sm text-black">Muslimpur, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
-                </div>
+            {/* Masjid List */}
+            <div className="flex-1 px-4 py-6">
+                <h1 className="text-2xl ml-2 font-bold text-black mb-8 poppins">Masjids in Vaniyambadi</h1>
 
-                <div className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img src='/Masjid_list_logo.png' />
+                <div className="space-y-4 mb-30">
+                    {masjids.map((masjid) => (
+                        <div
+                            key={masjid.id}
+                            className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 flex items-center justify-center">
+                                    <img src="/Masjid_list_logo.png" alt="masjid" />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-black">{masjid.name}</h3>
+                                    <p className="text-sm text-black">{masjid.address}, {masjid.town}</p>
+                                </div>
+                            </div>
+                            <div
+                                className="w-6 h-6 flex items-center justify-center cursor-pointer"
+                                onClick={() => toggleFavorite(masjid.id)}
+                            >
+                                <Star
+                                    className={favorites.includes(masjid.id) ? "text-yellow-500 fill-yellow-500" : "text-gray-600"}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="font-bold text-black">Masjid e Khadeem</h3>
-                            <p className="text-sm text-black">Muslimpur, VNB</p>
-                        </div>
-                    </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <Star />
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default MasjidListPage;
