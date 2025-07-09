@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
-import { ArrowLeft} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function PrayerTimesPage() {
     const { id } = useParams();
@@ -38,20 +38,35 @@ export default function PrayerTimesPage() {
             <Header />
 
             <div className="px-6 py-6 max-w-lg mx-auto">
-                <div className="text-left mb-6 flex gap-10">
+                <div className="text-left mb-6 flex gap-4">
                     <div>
-                        <h1 className="poppins text-xl font-semibold text-gray-900 pb-2">
+                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-2">
                             {masjid ? masjid.name : "Loading..."}
                         </h1>
-                        <h1 className="dm-sans text-sm font-semibold text-gray-900">
+                        <h1 className="dm-sans text-xs font-semibold text-gray-900">
                             {masjid ? masjid.address : "Loading..."}
                         </h1>
-                        <h1 className="dm-sans text-sm font-semibold text-gray-900 pb-2 inline-block">
+                        <h1 className="dm-sans text-xs font-semibold text-gray-900 pb-2 inline-block">
                             {masjid ? masjid.town : "Loading..."}
                         </h1>
                     </div>
                     <div>
-                        <button className='ml-10 mt-4'>Head to Masjid</button>
+                        <button
+                            className="
+    ml-1 mt-4
+    bg-yellow-400
+    hover:bg-yellow-500
+    text-gray-900
+    font-semibold
+    py-2 px-4
+    rounded-full
+    shadow
+    transition-colors duration-300
+  "
+                        >
+                            Get Directions
+                        </button>
+
                     </div>
 
                 </div>
@@ -94,12 +109,12 @@ export default function PrayerTimesPage() {
             </div>
             <div className="text-center mb-20">
 
-                    <button
-                        onClick={() => navigate('/home')}
-                        className={`p-2 rounded-full transition-colors bg-yellow-500`}
-                    >
+                <button
+                    onClick={() => navigate('/home')}
+                    className={`p-2 rounded-full transition-colors bg-yellow-500`}
+                >
                     <ArrowLeft size={37} className="text-gray-800" />
-                    </button>
+                </button>
 
             </div>
         </div>
