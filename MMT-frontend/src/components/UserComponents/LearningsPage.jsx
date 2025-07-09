@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header';
 
 const LearningsPage = () => (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#fef9ef] flex flex-col">
         <Header />
 
         {/* Learnings Content */}

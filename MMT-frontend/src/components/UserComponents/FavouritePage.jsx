@@ -3,7 +3,7 @@ import Header from './Header';
 import { Star } from 'lucide-react';
 
 const FavouritePage = () => (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#fef9ef] flex flex-col">
         <Header />
 
         {/* Favourite Content */}

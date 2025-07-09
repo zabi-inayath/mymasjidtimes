@@ -1,9 +1,9 @@
 import React from 'react';
 import Header from './Header';
-import { CodeXml, Globe, Instagram, Linkedin } from 'lucide-react';
+import { CodeXml} from 'lucide-react';
 
 const AboutPage = () => (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#fef9ef] flex flex-col">
         <Header />
 
         {/* About Content */}
@@ -20,7 +20,7 @@ const AboutPage = () => (
                     many more cities in the future!
                 </p>
                 <br />
-                <p className="text-black text-center text-sm">
+                <p className="text-black text-center text-sm font-bold">
                     Developed with love by <a className='underline hover:text-yellow-800' href='https://instagram.com/zabi_inayath'>zabi_inayath</a>
                 </p>
             </div>
@@ -33,7 +33,7 @@ const AboutPage = () => (
                             <img className='rounded-4xl size-15' src='/dev_profile.png' />
                         </div>
                         <div className='text-left'>
-                            <h3 className="mb-4 text-white text-2xl hagrid">Syed Zabiullah</h3>
+                            <h3 className="mb-2 text-white text-2xl hagrid">Syed Zabiullah</h3>
                             {/* <p className="text-sm underline text-white"><a className='underline hover:text-yellow-600' href='https://zabinayath.space'>Visit portfolio</a></p> */}
                             <div className='flex gap-3 text-white text-2xl'>
                                 <a href="https://github.com/zabi-inayath"><i class="fa-brands fa-github hover:text-black"></i></a>
