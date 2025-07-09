@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
 import axios from 'axios';
 import { ArrowLeft } from 'lucide-react';
+import { ThreeDot } from 'react-loading-indicators';
 
 export default function PrayerTimesPage() {
     const { id } = useParams();
@@ -33,6 +34,7 @@ export default function PrayerTimesPage() {
         { name: 'Jummah', azaan: masjid.jummah, iqamath: masjid.jummahIqamath }
     ] : [];
 
+    // Helper to convert time to 12-hour format
     function convertTo12Hour(timeStr) {
         if (!timeStr) return "-";
 
@@ -44,52 +46,61 @@ export default function PrayerTimesPage() {
         hour = hour % 12;
         if (hour === 0) hour = 12;
 
-        return `${hour}:${minute}`;
+        return `${hour}:${minute} ${ampm}`;
     }
 
+    // Single global loader
+    if (!masjid) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <ThreeDot variant="bounce" color="orange" size="medium" />
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
+        <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
 
             <div className="px-6 py-6 max-w-lg mx-auto">
+                {/* Masjid Details */}
                 <div className="text-left mb-6 flex gap-6">
                     <div>
                         <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
-                            {masjid ? masjid.name : "Loading..."}
+                            {masjid.name}
                         </h1>
                         <h1 className="dm-sans text-xs font-semibold text-gray-900">
-                            {masjid ? masjid.address : "Loading..."}
+                            {masjid.address}
                         </h1>
                         <h1 className="dm-sans text-xs font-semibold text-gray-900 pb-2">
-                            {masjid ? masjid.town : "Loading..."}
+                            {masjid.town}
                         </h1>
                     </div>
                     <div>
                         <button
                             className="
-    ml-1 mt-4
-    bg-yellow-400
-    hover:bg-yellow-500
-    text-gray-900
-    font-semibold
-    py-2 px-4
-    rounded-full
-    shadow
-    transition-colors duration-300
-  "
+                                ml-1 mt-4
+                                bg-yellow-400
+                                hover:bg-yellow-500
+                                text-gray-900
+                                font-semibold
+                                py-2 px-4
+                                rounded-full
+                                shadow
+                                transition-colors duration-300
+                            "
                         >
                             Get Directions
                         </button>
-
                     </div>
-
                 </div>
 
+                {/* Heading */}
                 <div className="text-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-900 poppins">Prayer Timings</h2>
                 </div>
 
+                {/* Prayer Timings Table */}
                 <div className="bg-yellow-300 rounded-4xl px-8 py-8 mb-8">
                     <div className="grid grid-cols-3 gap-3 mb-4">
                         <div className="text-left">
@@ -110,10 +121,14 @@ export default function PrayerTimesPage() {
                                     <span className="font-extrabold text-gray-800 text-lg dm-sans">{prayer.name}</span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-bold text-gray-800 text-xl text-center">{convertTo12Hour(prayer.azaan) || "-"}</span>
+                                    <span className="font-bold text-gray-800 text-xl text-center">
+                                        {convertTo12Hour(prayer.azaan)}
+                                    </span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-bold text-gray-800 text-xl text-center">{convertTo12Hour(prayer.iqamath) || "-"}</span>
+                                    <span className="font-bold text-gray-800 text-xl text-center">
+                                        {convertTo12Hour(prayer.iqamath)}
+                                    </span>
                                 </div>
                             </div>
                         ))
@@ -121,16 +136,28 @@ export default function PrayerTimesPage() {
                         <p className="text-center text-black">Loading timings...</p>
                     )}
                 </div>
-            </div>
-            <div className="text-center mb-20">
 
+                {/* Announcements Section */}
+                {masjid.announcements && (
+                    <div className="bg-white border-l-4 border-yellow-500 p-4 mb-8 rounded shadow">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 poppins">
+                            Notice/Announcement
+                        </h3>
+                        <p className="text-gray-800 dm-sans">
+                            {masjid.announcements}
+                        </p>
+                    </div>
+                )}
+            </div>
+
+            {/* Back Button */}
+            <div className="text-center mb-20">
                 <button
                     onClick={() => navigate('/home')}
-                    className={`p-2 rounded-full transition-colors bg-yellow-500`}
+                    className="p-2 rounded-full transition-colors bg-yellow-500 hover:bg-yellow-600 shadow"
                 >
                     <ArrowLeft size={37} className="text-gray-800" />
                 </button>
-
             </div>
         </div>
     );
