@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import { CodeXml } from 'lucide-react';
+import { CodeXml, Globe, Instagram, Linkedin } from 'lucide-react';
 
 const AboutPage = () => (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -25,19 +25,31 @@ const AboutPage = () => (
                 </p>
             </div>
 
+            <h2 className="text-3xl font-bold text-black  mb-8 ml-2 poppins">Meet Developer</h2>
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-black mb-4">Meet Developer</h2>
                 <div className="bg-gray-600 p-4 rounded-2xl flex gap-2 items-center justify-between dm-sans">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 flex items-center justify-center">
-                            <img className='rounded-3xl' src='/dev_profile.png' />
+                        <div className="w-16 h-16 flex items-center justify-center">
+                            <img className='rounded-4xl size-15' src='/dev_profile.png' />
                         </div>
-                        <div>
-                            <h3 className="font-bold text-white">Syed Zabiullah</h3>
+                        <div className='text-left'>
+                            <h3 className="mb-4 text-white text-2xl hagrid">Syed Zabiullah</h3>
+                            {/* <p className="text-sm underline text-white"><a className='underline hover:text-yellow-600' href='https://zabinayath.space'>Visit portfolio</a></p> */}
+                            <div className='flex gap-3 text-white text-2xl'>
+                                <a href="https://github.com/zabi-inayath"><i class="fa-brands fa-github hover:text-black"></i></a>
+                                <a href="https://www.linkedin.com/in/zabi-inayath/"><i class="fa-brands fa-linkedin hover:text-black"></i></a>
+                                <a href="https://x.com/zabi_inayath"><i class="fa-brands fa-square-x-twitter hover:text-black"></i></a>
+                                <a href="https://www.instagram.com/zabi_inayath/"><i
+                                    class="fa-brands fa-square-instagram hover:text-black"></i></a>
+                                {/* <Linkedin />
+                                <Instagram />
+                                <Globe /> */}
+                            </div>
+                            
                         </div>
                     </div>
-                    <div className="w-6 h-6 flex items-center justify-center">
-                        <CodeXml className='text-white'/>
+                    <div className="w-12 h-12 flex items-center justify-center mr-2">
+                        <CodeXml className='h-8 w-8 text-white'/>
                     </div>
                 </div>
                 <p className="text-black mb-2">
