@@ -33,20 +33,35 @@ export default function PrayerTimesPage() {
         { name: 'Jummah', azaan: masjid.jummah, iqamath: masjid.jummahIqamath }
     ] : [];
 
+    function convertTo12Hour(timeStr) {
+        if (!timeStr) return "-";
+
+        const [hourStr, minuteStr] = timeStr.split(":");
+        let hour = parseInt(hourStr, 10);
+        const minute = minuteStr;
+        const ampm = hour >= 12 ? "PM" : "AM";
+
+        hour = hour % 12;
+        if (hour === 0) hour = 12;
+
+        return `${hour}:${minute}`;
+    }
+
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             <Header />
 
             <div className="px-6 py-6 max-w-lg mx-auto">
-                <div className="text-left mb-6 flex gap-4">
+                <div className="text-left mb-6 flex gap-6">
                     <div>
-                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-2">
+                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
                             {masjid ? masjid.name : "Loading..."}
                         </h1>
                         <h1 className="dm-sans text-xs font-semibold text-gray-900">
                             {masjid ? masjid.address : "Loading..."}
                         </h1>
-                        <h1 className="dm-sans text-xs font-semibold text-gray-900 pb-2 inline-block">
+                        <h1 className="dm-sans text-xs font-semibold text-gray-900 pb-2">
                             {masjid ? masjid.town : "Loading..."}
                         </h1>
                     </div>
@@ -95,10 +110,10 @@ export default function PrayerTimesPage() {
                                     <span className="font-extrabold text-gray-800 text-lg dm-sans">{prayer.name}</span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-bold text-gray-800 text-xl text-center">{prayer.azaan || "-"}</span>
+                                    <span className="font-bold text-gray-800 text-xl text-center">{convertTo12Hour(prayer.azaan) || "-"}</span>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-bold text-gray-800 text-xl text-center">{prayer.iqamath || "-"}</span>
+                                    <span className="font-bold text-gray-800 text-xl text-center">{convertTo12Hour(prayer.iqamath) || "-"}</span>
                                 </div>
                             </div>
                         ))
