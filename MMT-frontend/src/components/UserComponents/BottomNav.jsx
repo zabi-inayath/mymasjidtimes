@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Clock, Star, Book, Grid3X3 } from 'lucide-react';
+import { Home, Clock, Star, Book, Grid3X3, ListCollapse, Info } from 'lucide-react';
 
 const BottomNav = ({ currentPage, setCurrentPage }) => (
     <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
@@ -14,7 +14,7 @@ const BottomNav = ({ currentPage, setCurrentPage }) => (
                 onClick={() => setCurrentPage('masjid')}
                 className={`p-2 rounded-full transition-colors ${currentPage === 'masjid' ? 'bg-yellow-500' : 'hover:bg-yellow-500'}`}
             >
-                <Clock size={24} className="text-gray-800" />
+                <ListCollapse size={24} className="text-gray-800" />
             </button>
             <button
                 onClick={() => setCurrentPage('favourite')}
@@ -32,7 +32,7 @@ const BottomNav = ({ currentPage, setCurrentPage }) => (
                 onClick={() => setCurrentPage('about')}
                 className={`p-2 rounded-full transition-colors ${currentPage === 'about' ? 'bg-yellow-500' : 'hover:bg-yellow-500'}`}
             >
-                <Grid3X3 size={24} className="text-gray-800" />
+                <Info size={24} className="text-gray-800" />
             </button>
         </div>
     </div>
