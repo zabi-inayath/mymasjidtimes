@@ -36,14 +36,11 @@ const AboutPage = () => (
                             <h3 className="mb-2 text-white text-2xl hagrid">Syed Zabiullah</h3>
                             {/* <p className="text-sm underline text-white"><a className='underline hover:text-yellow-600' href='https://zabinayath.space'>Visit portfolio</a></p> */}
                             <div className='flex gap-3 text-white text-2xl'>
-                                <a href="https://github.com/zabi-inayath"><i class="fa-brands fa-github hover:text-black"></i></a>
-                                <a href="https://www.linkedin.com/in/zabi-inayath/"><i class="fa-brands fa-linkedin hover:text-black"></i></a>
-                                <a href="https://x.com/zabi_inayath"><i class="fa-brands fa-square-x-twitter hover:text-black"></i></a>
-                                <a href="https://www.instagram.com/zabi_inayath/"><i
-                                    class="fa-brands fa-square-instagram hover:text-black"></i></a>
-                                {/* <Linkedin />
-                                <Instagram />
-                                <Globe /> */}
+                                <a href="https://github.com/zabi-inayath"><i className="fa-brands fa-github hover:text-black"></i></a>
+                                <a href="https://www.linkedin.com/in/zabi-inayath/"><i className="fa-brands fa-linkedin hover:text-black"></i></a>
+                                <a href="https://x.com/zabi_inayath"><i className="fa-brands fa-square-x-twitter hover:text-black"></i></a>
+                                <a href="https://www.zabinayath.space"><i
+                                    className="fa-brands fa-square-instagram hover:text-black"></i></a>
                             </div>
 
                         </div>
