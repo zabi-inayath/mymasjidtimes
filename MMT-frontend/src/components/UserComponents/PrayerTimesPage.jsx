@@ -46,14 +46,14 @@ export default function PrayerTimesPage() {
         hour = hour % 12;
         if (hour === 0) hour = 12;
 
-        return `${hour}:${minute} ${ampm}`;
+        return `${hour}:${minute}`;
     }
 
-    // Single global loader
+
     if (!masjid) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <ThreeDot variant="bounce" color="orange" size="medium" />
+                <ThreeDot variant="bounce" color="orange" size="small" />
             </div>
         );
     }
@@ -64,14 +64,13 @@ export default function PrayerTimesPage() {
             <div className="px-4 pb-6 max-w-md mx-auto bg-[#fef9ef]">
 
                 {/* Back Button */}
-                <div className="text-left absolute top-5">
+                <div className="text-left absolute cursor-pointer" onClick={() => navigate('/home')}>
                     <button
-                        onClick={() => navigate('/home')}
-                        className="p-2 rounded-full transition-colors bg-yellow-500 hover:bg-yellow-600 shadow m"
+                        className="p-2 rounded-full absolute top-6 transition-colors bg-yellow-500 hover:bg-yellow-600 shadow m"
                     >
-                        <ArrowLeft size={17} className="text-gray-800" />
+                        <ArrowLeft size={17} className="text-gray-800 top-5" />
                     </button>
-                    <p className='text-md font-semibold poppins ml-3 mb-6  inline-block'>{masjid.name}</p>
+                    <p className='text-md font-semibold poppins mt-7 ml-10'>{masjid.name}</p>
                 </div>
 
                 {/* Heading */}
@@ -112,7 +111,7 @@ export default function PrayerTimesPage() {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-black">Loading timings...</p>
+                        <ThreeDot variant="bounce" color="orange" size="small" />
                     )}
                 </div>
 
@@ -123,32 +122,32 @@ export default function PrayerTimesPage() {
                 {/* Announcements Section */}
                 {masjid.announcements ? (
                     <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
-                            <div className="text-left">
-                                <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
+                        <div className="text-left">
+                            <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
                                 {masjid.announcements}
-                                </div>
                             </div>
                         </div>
+                    </div>
                 ) : (
-                        <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
-                            <div className="text-center">
-                                <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
-                                    No Notice/Announcement
-                                </div>
+                    <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                        <div className="text-center">
+                            <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
+                                No Notice/Announcement
                             </div>
                         </div>
+                    </div>
                 )}
 
-                <div className="text-center my-6">
+                {/* <div className="text-center my-6">
                     <h2 className="text-2xl font-bold text-gray-900 poppins">Address</h2>
-                </div>
+                </div> */}
 
                 {/* Masjid Details */}
-                <div className="text-center">
+                {/* <div className="text-center">
                     <div className='mb-10'>
-                        {/* <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
+                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
                             {masjid.name}
-                        </h1> */}
+                        </h1>
                         <h1 className="dm-sans text-lg font-semibold text-gray-900">
                             {masjid.address}
                         </h1>
@@ -156,9 +155,9 @@ export default function PrayerTimesPage() {
                             {masjid.town}
                         </h1>
                     </div>
-                    <div>
-                        <button
-                            className="
+                    <div> */}
+                {/* <button
+                    className="
                                 ml-2 mt-4
                                 bg-yellow-400
                                 hover:bg-yellow-500
@@ -169,11 +168,9 @@ export default function PrayerTimesPage() {
                                 shadow
                                 transition-colors duration-300
                             "
-                        >
-                            Get Directions
-                        </button>
-                    </div>
-                </div>
+                >
+                    Get Directions
+                </button> */}
             </div>
         </div>
     );

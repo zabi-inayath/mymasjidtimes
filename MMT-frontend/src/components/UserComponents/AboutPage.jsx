@@ -65,17 +65,14 @@ const AboutPage = () => {
 
     if (loading) {
         return (
-            <>
-                <Header />
-                <div className="flex justify-center items-center h-screen">
-                    <ThreeDot variant="bounce" color="orange" size="small" />
-                </div>
-            </>
-            
+            <div className="flex justify-center items-center h-screen">
+                <ThreeDot variant="bounce" color="orange" size="small" />
+            </div>
         );
     }
 
     return (
+        
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
 
@@ -88,7 +85,7 @@ const AboutPage = () => {
                 >
                     <option value="en">English</option>
                     <option value="ur">Urdu</option>
-                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="ta">தமிழ்</option>
                 </select>
             </div>
 
@@ -113,13 +110,13 @@ const AboutPage = () => {
 
                 <h2 className="text-3xl font-bold text-black mb-8 ml-2 poppins">{t.dev}</h2>
                 <div className="text-center">
-                    <div className="bg-gray-600 mb-8 p-4 rounded-2xl flex gap-2 items-center justify-between dm-sans pointer" onClick={() => window.location.href = 'https://zabinayath.space'}>
-                        <div className="flex items-center gap-3" >
+                    <div className="bg-gray-600 mb-8 p-4 rounded-2xl flex gap-2 items-center justify-between dm-sans pointer">
+                        <div className="flex items-center gap-3">
                             <div className="w-16 h-16 flex items-center justify-center">
                                 <img className='rounded-4xl size-15' src='/dev_profile.png' />
                             </div>
                             <div className='text-left'>
-                                <h3 className="mb-2 text-white text-2xl hagrid">Syed Zabiullah</h3>
+                                <h3 className="mb-2 text-white text-2xl hagrid" onClick={() => window.location.href = 'https://zabinayath.space'}>Syed Zabiullah</h3>
                                 <div className='flex gap-3 text-white text-2xl'>
                                     <a href="https://github.com/zabi-inayath"><i className="fa-brands fa-github hover:text-black"></i></a>
                                     <a href="https://www.linkedin.com/in/zabi-inayath/"><i className="fa-brands fa-linkedin hover:text-black"></i></a>
@@ -129,7 +126,7 @@ const AboutPage = () => {
                             </div>
                         </div>
 
-                        <div className="w-12 h-12 flex items-center justify-center mr-2">
+                        <div className="w-12 h-12 flex items-center justify-center mr-2" onClick={() => window.location.href = 'https://zabinayath.space'}>
                             <CodeXml className='h-8 w-8 text-white' />
                         </div>
                     </div>

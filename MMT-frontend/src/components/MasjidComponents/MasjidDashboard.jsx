@@ -331,7 +331,7 @@ export default function MasjidDashboard() {
                     </div>
                 ))}
                 <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                    Updated on: {formatDateTime(lastUpdate)}
+                    Updated on: {formatDateTime(lastUpdate)}  {/* Update thid div */}
                 </div>
             </div>
             <div id="notice-section" className="scroll-mt-20">
