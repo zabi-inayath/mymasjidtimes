@@ -109,10 +109,15 @@ export default function PrayerTimesPage() {
                                     </span>
                                 </div>
                             </div>
+                            
                         ))
+                        
                     ) : (
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     )}
+                    <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
+                        Ipdated on: {formatDateTime(updatedAt)}
+                    </div>
                 </div>
 
                 <div className="text-center my-6">

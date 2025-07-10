@@ -3,6 +3,7 @@ import { Home, Edit3 } from 'lucide-react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { ThreeDot } from 'react-loading-indicators';
 
 // Memoized EditView component
 const EditView = memo(({
@@ -32,35 +33,16 @@ const EditView = memo(({
                             type="time"
                             value={prayer.azaan}
                             onChange={(e) => onPrayerTimeChange(index, 'azaan', e.target.value)}
-                            className="
-    bg-yellow-400 
-    rounded 
-    text-lg 
-    w-[100px] 
-    sm:w-[120px] 
-    px-1 
-    py-1
-  "
+                            className="bg-yellow-400 rounded text-md w-[90px] sm:w-[120px] px-2 py-1"
                             step="300"
                         />
-
                         <input
                             type="time"
                             value={prayer.iqamath}
                             onChange={(e) => onPrayerTimeChange(index, 'iqamath', e.target.value)}
-                            className="
-    bg-yellow-400 
-    rounded 
-    text-lg 
-    w-[100px] 
-    sm:w-[120px]
-    px-1 
-    py-1
-  "
+                            className="bg-yellow-400 rounded text-md w-[90px] sm:w-[120px] px-2 py-1"
                             step="300"
                         />
-
-
                     </div>
                 ))}
 
@@ -168,7 +150,8 @@ export default function MasjidDashboard() {
 
             setPrayerTimes(updatedPrayerTimes);
             setNotice(masjid.announcements || '');
-            setLastUpdate(masjid.lastUpdated || new Date().toISOString().slice(0, 10));
+            // Use the lastUpdated from database, don't generate new one here
+            setLastUpdate(masjid.updatedAt || null);
         } catch (err) {
             if (err.response?.status === 401) {
                 handleLogout();
@@ -191,7 +174,8 @@ export default function MasjidDashboard() {
         const minute = parseInt(minuteStr, 10);
         if (isNaN(hour) || isNaN(minute)) return "";
         const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
-        return `${formattedHour}:${minute.toString().padStart(2, "0")}`;
+        const period = hour >= 12 ? "PM" : "AM";
+        return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
     }, []);
 
     const convertTo24Hour = (timeStr) => {
@@ -218,7 +202,8 @@ export default function MasjidDashboard() {
         }
 
         try {
-            await axios.put(
+            // Send the update request
+            const response = await axios.put(
                 `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}/times`,
                 {
                     fajr: prayerTimes[0].azaan,
@@ -233,10 +218,13 @@ export default function MasjidDashboard() {
                     ishaIqamath: prayerTimes[4].iqamath,
                     jummah: prayerTimes[5].azaan,
                     jummahIqamath: prayerTimes[5].iqamath,
-                    lastUpdated: new Date().toISOString(),
+                    // Let the server set the lastUpdated timestamp
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
+
+            // Use the lastUpdated returned from the server
+            setLastUpdate(response.data.updatedAt);
             await fetchMasjidData();
             setCurrentView("home");
             toast.success("Times updated successfully");
@@ -292,27 +280,36 @@ export default function MasjidDashboard() {
     const formatDateTime = (isoString) => {
         if (!isoString) return 'Not updated yet';
 
-        const date = new Date(isoString);
-        const now = new Date();
+        try {
+            const date = new Date(isoString);
+            if (isNaN(date.getTime())) {
+                return 'Not updated yet';
+            }
 
-        // Check if same day (Today)
-        if (date.toDateString() === now.toDateString()) {
-            return 'Today - ' + formatTime(date);
+            const now = new Date();
+            const timeStr = formatTime(date);
+
+            // Check if same day (Today)
+            if (date.toDateString() === now.toDateString()) {
+                return 'Today - ' + timeStr;
+            }
+
+            // Check if yesterday
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday - ' + timeStr;
+            }
+
+            // Otherwise return full date
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+
+            return `${dd}-${mm}-${yyyy} - ${timeStr}`;
+        } catch (e) {
+            return 'Not updated yet';
         }
-
-        // Check if yesterday
-        const yesterday = new Date(now);
-        yesterday.setDate(yesterday.getDate() - 1);
-        if (date.toDateString() === yesterday.toDateString()) {
-            return 'Yesterday - ' + formatTime(date);
-        }
-
-        // Otherwise return full date
-        const dd = String(date.getDate()).padStart(2, '0');
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const yyyy = date.getFullYear();
-
-        return `${dd}-${mm}-${yyyy} -- ${formatTime(date)}`;
     };
 
     useEffect(() => {
@@ -328,7 +325,9 @@ export default function MasjidDashboard() {
     }, [validateAuth, fetchMasjidData]);
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+        return <div className="flex justify-center items-center min-h-screen">
+                        <ThreeDot variant="bounce" color="orange" size="small" />
+                    </div>;
     }
 
     if (!authChecked) return null;
@@ -350,7 +349,7 @@ export default function MasjidDashboard() {
                     </div>
                 ))}
                 <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                    Updated on: {formatDateTime(lastUpdate)} {/* no showing proper */}
+                   Updated on: {formatDateTime(lastUpdate)}
                 </div>
             </div>
             <div id="notice-section" className="scroll-mt-20">

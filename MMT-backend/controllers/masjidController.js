@@ -210,7 +210,8 @@ const getMasjidInfo = async (req, res) => {
         ishaIqamath,
         jummah,
         jummahIqamath,
-        announcements
+        announcements,
+        updatedAt
       FROM masjids
       WHERE id = ?
     `;
