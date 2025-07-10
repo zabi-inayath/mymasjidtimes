@@ -49,6 +49,43 @@ export default function PrayerTimesPage() {
         return `${hour}:${minute}`;
     }
 
+    const formatDateTime = (isoString) => {
+        if (!isoString) return 'Not updated yet';
+
+        try {
+            const date = new Date(isoString);
+            if (isNaN(date.getTime())) {
+                return 'Not updated yet';
+            }
+
+            const now = new Date();
+
+            const hours = date.getHours();
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHour = hours % 12 === 0 ? 12 : hours % 12;
+            const timeStr = `${displayHour}:${minutes} ${ampm}`;
+
+            if (date.toDateString() === now.toDateString()) {
+                return 'Today - ' + timeStr;
+            }
+
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday - ' + timeStr;
+            }
+
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+
+            return `${dd}-${mm}-${yyyy} - ${timeStr}`;
+        } catch (e) {
+            return 'Not updated yet';
+        }
+    };
+    
 
     if (!masjid) {
         return (
@@ -116,7 +153,7 @@ export default function PrayerTimesPage() {
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     )}
                     <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                        Ipdated on: {formatDateTime(updatedAt)}
+                        Updated on: {formatDateTime(masjid.updatedAt)}
                     </div>
                 </div>
 
