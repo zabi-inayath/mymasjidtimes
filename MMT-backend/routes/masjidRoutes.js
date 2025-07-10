@@ -10,6 +10,7 @@ const {
     updateAnnouncement,
     removeAnnouncement,
     verifyMasjidToken,
+    getEarliestTime,
 } = require("../controllers/masjidController");
 
 // Authentication routes
@@ -20,6 +21,9 @@ router.post("/signup", addNewMasjid);
 router.get("/selected/:id", getMasjidInfo);
 router.put("/:id", updateMasjidInfo);
 router.put("/:id/times", updateMasjidTimes);
+
+//to list earliest namaz time
+router.get("/namazearliest", getEarliestTime)
 
 // //Announcement routes
 router.post("/:id/addannouncements", updateAnnouncement);

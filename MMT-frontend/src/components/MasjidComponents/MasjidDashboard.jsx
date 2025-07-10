@@ -336,7 +336,7 @@ export default function MasjidDashboard() {
             </div>
             <div id="notice-section" className="scroll-mt-20">
                 <h2 className="text-2xl poppins font-bold text-gray-800 text-center mb-6">Current Notice</h2>
-                <div className="bg-yellow-300 rounded-4xl p-8 mb-24 ">
+                <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
                     <div className="text-center">
                         <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
                             {notice || "No Notice/Announcement"}

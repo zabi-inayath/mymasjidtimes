@@ -59,45 +59,24 @@ export default function PrayerTimesPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#fef9ef] flex flex-col">
-            <Header />
+        <div className="min-h-screen bg-[#fef9ef]">
+            {/* <Header /> */}
+            <div className="px-4 pb-6 max-w-md mx-auto bg-[#fef9ef]">
 
-            <div className="px-6 py-6 max-w-lg mx-auto">
-                {/* Masjid Details */}
-                <div className="text-left mb-6 flex gap-6">
-                    <div>
-                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
-                            {masjid.name}
-                        </h1>
-                        <h1 className="dm-sans text-xs font-semibold text-gray-900">
-                            {masjid.address}
-                        </h1>
-                        <h1 className="dm-sans text-xs font-semibold text-gray-900 pb-2">
-                            {masjid.town}
-                        </h1>
-                    </div>
-                    <div>
-                        <button
-                            className="
-                                ml-1 mt-4
-                                bg-yellow-400
-                                hover:bg-yellow-500
-                                text-gray-900
-                                font-semibold
-                                py-2 px-4
-                                rounded-full
-                                shadow
-                                transition-colors duration-300
-                            "
-                        >
-                            Get Directions
-                        </button>
-                    </div>
+                {/* Back Button */}
+                <div className="text-left absolute top-5">
+                    <button
+                        onClick={() => navigate('/home')}
+                        className="p-2 rounded-full transition-colors bg-yellow-500 hover:bg-yellow-600 shadow m"
+                    >
+                        <ArrowLeft size={17} className="text-gray-800" />
+                    </button>
+                    <p className='text-md font-semibold poppins ml-3 mb-6  inline-block'>{masjid.name}</p>
                 </div>
 
                 {/* Heading */}
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 poppins">Prayer Timings</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 poppins pt-24">Prayer Timings</h2>
                 </div>
 
                 {/* Prayer Timings Table */}
@@ -137,27 +116,64 @@ export default function PrayerTimesPage() {
                     )}
                 </div>
 
-                {/* Announcements Section */}
-                {masjid.announcements && (
-                    <div className="bg-white border-l-4 border-yellow-500 p-4 mb-8 rounded shadow">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 poppins">
-                            Notice/Announcement
-                        </h3>
-                        <p className="text-gray-800 dm-sans">
-                            {masjid.announcements}
-                        </p>
-                    </div>
-                )}
-            </div>
+                <div className="text-center my-6">
+                    <h2 className="text-2xl font-bold text-gray-900 poppins">Notice</h2>
+                </div>
 
-            {/* Back Button */}
-            <div className="text-center mb-20">
-                <button
-                    onClick={() => navigate('/home')}
-                    className="p-2 rounded-full transition-colors bg-yellow-500 hover:bg-yellow-600 shadow"
-                >
-                    <ArrowLeft size={37} className="text-gray-800" />
-                </button>
+                {/* Announcements Section */}
+                {masjid.announcements ? (
+                    <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                            <div className="text-left">
+                                <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
+                                {masjid.announcements}
+                                </div>
+                            </div>
+                        </div>
+                ) : (
+                        <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                            <div className="text-center">
+                                <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
+                                    No Notice/Announcement
+                                </div>
+                            </div>
+                        </div>
+                )}
+
+                <div className="text-center my-6">
+                    <h2 className="text-2xl font-bold text-gray-900 poppins">Address</h2>
+                </div>
+
+                {/* Masjid Details */}
+                <div className="text-center">
+                    <div className='mb-10'>
+                        {/* <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
+                            {masjid.name}
+                        </h1> */}
+                        <h1 className="dm-sans text-lg font-semibold text-gray-900">
+                            {masjid.address}
+                        </h1>
+                        <h1 className="dm-sans text-lg font-semibold text-gray-900 pb-2">
+                            {masjid.town}
+                        </h1>
+                    </div>
+                    <div>
+                        <button
+                            className="
+                                ml-2 mt-4
+                                bg-yellow-400
+                                hover:bg-yellow-500
+                                text-gray-900
+                                font-semibold
+                                py-2 px-4
+                                rounded-full
+                                shadow
+                                transition-colors duration-300
+                            "
+                        >
+                            Get Directions
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

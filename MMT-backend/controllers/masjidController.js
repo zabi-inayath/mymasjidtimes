@@ -19,6 +19,22 @@ const getMasjids = async (req, res) => {
     }
 }
 
+const getEarliestTime = async (req, res) => {
+    try {
+        const sql = "SELECT fajrIqamath, zuharIqamath, asarIqamath, maghribIqamath, ishaIqamath, jummahIqamath, FROM masjids";
+        const [rows] = await db.query(sql);
+
+        if (rows.length > 0) {
+            res.status(200).json(rows);
+        } else {
+            res.status(404).json({ message: "No masjids found." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching masjids." });
+    }
+}
+
 const loginMasjid = async (req, res) => {
     const { adminUsername, adminPassword } = req.body;
 
@@ -306,5 +322,6 @@ module.exports = {
     updateMasjidInfo,
     updateMasjidTimes,
     updateAnnouncement,
-    removeAnnouncement
+    removeAnnouncement,
+    getEarliestTime
 };
