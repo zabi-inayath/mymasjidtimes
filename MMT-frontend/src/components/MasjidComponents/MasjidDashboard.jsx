@@ -26,7 +26,7 @@ const EditView = memo(({
                 </div>
 
                 {prayerTimes.map((prayer, index) => (
-                    <div key={index} className="grid grid-cols-3 gap-2 py-2 items-center poppins">
+                    <div key={index} className="grid grid-cols-3 gap-10 py-2 items-center poppins">
                         <div className="font-bold text-gray-800 text-lg">{prayer.name}</div>
                         <input
                             type="time"
@@ -35,8 +35,8 @@ const EditView = memo(({
                             className="
     bg-yellow-400 
     rounded 
-    text-sm 
-    w-[80px] 
+    text-lg 
+    w-[100px] 
     sm:w-[120px] 
     px-1 
     py-1
@@ -44,21 +44,22 @@ const EditView = memo(({
                             step="300"
                         />
 
-<input
-  type="time"
-                            value={prayer.azaan}
-                            onChange={(e) => onPrayerTimeChange(index, 'azaan', e.target.value)}
+                        <input
+                            type="time"
+                            value={prayer.iqamath}
+                            onChange={(e) => onPrayerTimeChange(index, 'iqamath', e.target.value)}
                             className="
     bg-yellow-400 
     rounded 
-    text-sm 
-    w-[80px] 
-    sm:w-[120px] 
+    text-lg 
+    w-[100px] 
+    sm:w-[120px]
     px-1 
     py-1
   "
                             step="300"
                         />
+
 
                     </div>
                 ))}
@@ -349,7 +350,7 @@ export default function MasjidDashboard() {
                     </div>
                 ))}
                 <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                    Updated on: {formatDateTime(lastUpdate)}
+                    Updated on: {formatDateTime(lastUpdate)} {/* no showing proper */}
                 </div>
             </div>
             <div id="notice-section" className="scroll-mt-20">
