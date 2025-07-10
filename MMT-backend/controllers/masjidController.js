@@ -21,7 +21,7 @@ const getMasjids = async (req, res) => {
 
 const getEarliestTime = async (req, res) => {
     try {
-        const sql = "SELECT fajrIqamath, zuharIqamath, asarIqamath, maghribIqamath, ishaIqamath, jummahIqamath, FROM masjids";
+        const sql = "SELECT id, name, fajrIqamath, zuharIqamath, asarIqamath, maghribIqamath, ishaIqamath, jummahIqamath FROM masjids";
         const [rows] = await db.query(sql);
 
         if (rows.length > 0) {
@@ -124,6 +124,7 @@ const updateMasjidInfo = async (req, res) => {
 
 const addNewMasjid = async (req, res) => {
     const {
+        id,
         name,
         address,
         town,
@@ -147,14 +148,14 @@ const addNewMasjid = async (req, res) => {
     } = req.body;
 
     try {
-        // Fixed SQL query with correct number of placeholders
         const sql = `
             INSERT INTO masjids 
-            (name, address, town, fajr, fajrIqamath, zuhar, zuharIqamath, asar, asarIqamath, maghrib, maghribIqamath, isha, ishaIqamath, jummah, jummahIqamath, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (id, name, address, town, fajr, fajrIqamath, zuhar, zuharIqamath, asar, asarIqamath, maghrib, maghribIqamath, isha, ishaIqamath, jummah, jummahIqamath, announcements, adminUsername, adminPassword, adminEmail, adminPhone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
+            id,
             name,
             address,
             town,
@@ -190,9 +191,9 @@ const addNewMasjid = async (req, res) => {
 };
 
 const getMasjidInfo = async (req, res) => {
-  try {
-    const masjidId = req.params.id;
-    const sql = `
+    try {
+        const masjidId = req.params.id;
+        const sql = `
       SELECT
         name,
         address,
@@ -214,17 +215,17 @@ const getMasjidInfo = async (req, res) => {
       WHERE id = ?
     `;
 
-    const [result] = await db.query(sql, [masjidId]);
+        const [result] = await db.query(sql, [masjidId]);
 
-    if (result.length === 0) {
-      return res.status(404).json({ message: "Masjid not found" });
+        if (result.length === 0) {
+            return res.status(404).json({ message: "Masjid not found" });
+        }
+
+        res.json(result[0]);
+    } catch (error) {
+        console.error("Error fetching masjid info:", error);
+        res.status(500).json({ message: "Error fetching masjid info" });
     }
-
-    res.json(result[0]);
-  } catch (error) {
-    console.error("Error fetching masjid info:", error);
-    res.status(500).json({ message: "Error fetching masjid info" });
-  }
 };
 
 const updateMasjidTimes = async (req, res) => {

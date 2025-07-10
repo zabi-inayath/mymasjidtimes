@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 
 export default function MasjidSignupPage() {
     const [form, setForm] = useState({
+        id: '',
         name: '',
         address: '',
         town: '',
@@ -18,12 +19,17 @@ export default function MasjidSignupPage() {
     const validate = () => {
         const newErrors = {};
 
-        // Username: only lowercase letters, at least 3 chars
+        // MasjidID: lowercase letters/numbers/underscores, min 3 chars
+        if (!/^[a-z0-9_]{3,}$/.test(form.id)) {
+            newErrors.id = 'Masjid ID must be lowercase letters/numbers/underscores, at least 3 characters.';
+        }
+
+        // Username validation
         if (!/^[a-z0-9]{3,}$/.test(form.adminUsername)) {
             newErrors.adminUsername = 'Username must be lowercase letters/numbers, at least 3 characters.';
         }
 
-        // Password: min 8 chars, 1 uppercase, 1 lowercase, 1 special char
+        // Password validation
         if (
             !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$/.test(form.adminPassword)
         ) {
@@ -31,14 +37,14 @@ export default function MasjidSignupPage() {
                 'Password must be at least 8 characters, include 1 uppercase, 1 lowercase, 1 number and 1 special character.';
         }
 
-        // Email: basic email regex
+        // Email validation
         if (
             !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(form.adminEmail)
         ) {
             newErrors.adminEmail = 'Enter a valid email address.';
         }
 
-        // Phone: exactly 10 digits
+        // Phone validation
         if (!/^\d{10}$/.test(form.adminPhone)) {
             newErrors.adminPhone = 'Phone must be exactly 10 digits.';
         }
@@ -62,6 +68,7 @@ export default function MasjidSignupPage() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    id: form.id,
                     name: form.name,
                     address: form.address,
                     town: form.town,
@@ -73,9 +80,9 @@ export default function MasjidSignupPage() {
             });
             const data = await res.json();
             if (res.ok) {
-                // setMessage('Signup successful!');
                 toast.success('Signup successful!');
                 setForm({
+                    id: '',
                     name: '',
                     address: '',
                     town: '',
@@ -96,7 +103,6 @@ export default function MasjidSignupPage() {
     return (
         <div className="min-h-screen bg-orange-50 flex items-center justify-center px-4">
             <div className="w-full max-w-md">
-                {/* Logo and Title */}
                 <div className="text-center mb-6">
                     <div className="-mb-7">
                         <img className='h-40 w-40 mx-auto' src='/myMasjidTimes_Logo.png' alt="Logo" />
@@ -106,12 +112,27 @@ export default function MasjidSignupPage() {
                     </h1>
                 </div>
 
-                {/* Signup Form */}
                 <div className="p-8">
                     <h2 className="text-xl poppins font-semibold text-gray-800 text-center mb-8">
                         Masjid SignUp
                     </h2>
                     <div className="space-y-6">
+                        <div>
+                            <label className="block poppins text-sm font-medium text-gray-700 mb-2">
+                                Masjid ID:
+                            </label>
+                            <input
+                                type="text"
+                                name="id"
+                                value={form.id}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 bg-yellow-400 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600"
+                                placeholder="e.g. mmt_masjidname"
+                            />
+                            {errors.id && (
+                                <div className="text-red-600 text-xs mt-1">{errors.id}</div>
+                            )}
+                        </div>
                         <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
                                 Masjid Name:

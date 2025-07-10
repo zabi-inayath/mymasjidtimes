@@ -33,8 +33,9 @@ const FavouritePage = () => {
                 setLoading(false);
             }
         };
-
-        fetchFavorites();
+        setTimeout(() => {
+            fetchFavorites();
+        }, 1000);
     }, []);
 
     const removeFavorite = (id) => {
@@ -60,7 +61,7 @@ const FavouritePage = () => {
 
                 {loading ? (
                     <div className="flex justify-center mt-20">
-                        <ThreeDot variant="bob" color="orange" size="medium" />
+                        <ThreeDot variant="bounce" color="orange" size="small" />
                     </div>
                 ) : masjids.length === 0 ? (
                     <p className="text-gray-700 text-center mt-10">

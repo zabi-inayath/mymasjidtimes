@@ -30,7 +30,10 @@ const MasjidListPage = () => {
         const savedFavorites = JSON.parse(localStorage.getItem('favoriteMasjids')) || [];
         setFavorites(savedFavorites);
 
-        fetchMasjids();
+        setTimeout(() => {
+            fetchMasjids();
+        }, 2000);
+          
     }, []);
 
     const toggleFavorite = (id) => {
@@ -76,7 +79,7 @@ const MasjidListPage = () => {
                     <Search className="absolute left-3 top-3 text-gray-500" size={20} />
                     <input
                         type="text"
-                        placeholder="Search for masjid by name, address, or town"
+                        placeholder="Search for masjid by name"
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className="
@@ -90,7 +93,7 @@ const MasjidListPage = () => {
 
                 {loading ? (
                     <div className="flex justify-center mt-20">
-                        <ThreeDot variant="bob" color="orange" size="medium" />
+                        <ThreeDot variant="bounce" color="orange" size="small" />
                     </div>
                 ) : (
                     <div className="space-y-4 mb-30">
@@ -98,7 +101,7 @@ const MasjidListPage = () => {
                             filteredMasjids.map((masjid) => (
                                 <div
                                     key={masjid.id}
-                                    className="bg-yellow-200 p-4 rounded-2xl flex items-center justify-between dm-sans cursor-pointer"
+                                    className="bg-[#ffde59] p-4 rounded-2xl flex items-center justify-between dm-sans cursor-pointer"
                                     onClick={() => goToMasjidTiming(masjid.id)}
                                 >
                                     <div className="flex items-center gap-3">
@@ -121,7 +124,7 @@ const MasjidListPage = () => {
                                     >
                                         <Star
                                             className={favorites.includes(masjid.id)
-                                                ? "text-yellow-500 fill-yellow-500"
+                                                ? "text-[#f04760] fill-[#f04760]"
                                                 : "text-gray-600"}
                                         />
                                     </div>
