@@ -32,16 +32,34 @@ const EditView = memo(({
                             type="time"
                             value={prayer.azaan}
                             onChange={(e) => onPrayerTimeChange(index, 'azaan', e.target.value)}
-                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
+                            className="
+    bg-yellow-400 
+    rounded 
+    text-sm 
+    w-[80px] 
+    sm:w-[120px] 
+    px-1 
+    py-1
+  "
                             step="300"
                         />
-                        <input
-                            type="time"
-                            value={prayer.iqamath}
-                            onChange={(e) => onPrayerTimeChange(index, 'iqamath', e.target.value)}
-                            className="bg-yellow-400 rounded px-2 py-1 text-sm"
+
+<input
+  type="time"
+                            value={prayer.azaan}
+                            onChange={(e) => onPrayerTimeChange(index, 'azaan', e.target.value)}
+                            className="
+    bg-yellow-400 
+    rounded 
+    text-sm 
+    w-[80px] 
+    sm:w-[120px] 
+    px-1 
+    py-1
+  "
                             step="300"
                         />
+
                     </div>
                 ))}
 
@@ -331,7 +349,7 @@ export default function MasjidDashboard() {
                     </div>
                 ))}
                 <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                    Updated on: {formatDateTime(lastUpdate)}  {/* Update thid div */}
+                    Updated on: {formatDateTime(lastUpdate)}
                 </div>
             </div>
             <div id="notice-section" className="scroll-mt-20">
