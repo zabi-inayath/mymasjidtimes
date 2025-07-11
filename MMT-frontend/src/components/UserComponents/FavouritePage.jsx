@@ -50,7 +50,7 @@ const FavouritePage = () => {
     const goToMasjidTiming = (id) => {
         navigate(`/masjid-timing/${id}`);
     };
-    
+
 
     return (
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">

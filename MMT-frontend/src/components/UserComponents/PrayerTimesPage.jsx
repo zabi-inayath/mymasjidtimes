@@ -85,7 +85,7 @@ export default function PrayerTimesPage() {
             return 'Not updated yet';
         }
     };
-    
+
 
     if (!masjid) {
         return (
@@ -146,9 +146,9 @@ export default function PrayerTimesPage() {
                                     </span>
                                 </div>
                             </div>
-                            
+
                         ))
-                        
+
                     ) : (
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     )}

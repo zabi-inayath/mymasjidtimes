@@ -152,7 +152,7 @@ export default function MasjidDashboard() {
                 town: masjid.town || '',
                 adminEmail: masjid.adminEmail || '',
                 adminPhone: masjid.adminPhone || '',
-            });            
+            });
 
             const updatedPrayerTimes = [
                 { name: "Fajr", azaan: convertTo24Hour(masjid.fajr), iqamath: convertTo24Hour(masjid.fajrIqamath) },
@@ -200,7 +200,7 @@ export default function MasjidDashboard() {
             toast.error("Error updating masjid info");
         }
     };
-    
+
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("masjidID");
@@ -368,8 +368,8 @@ export default function MasjidDashboard() {
 
     if (loading) {
         return <div className="flex justify-center items-center min-h-screen">
-                        <ThreeDot variant="bounce" color="orange" size="small" />
-                    </div>;
+            <ThreeDot variant="bounce" color="orange" size="small" />
+        </div>;
     }
 
     if (!authChecked) return null;
@@ -391,7 +391,7 @@ export default function MasjidDashboard() {
                     </div>
                 ))}
                 <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                   Updated on: {formatDateTime(lastUpdate)}
+                    Updated on: {formatDateTime(lastUpdate)}
                 </div>
             </div>
             <div id="notice-section" className="scroll-mt-20">
@@ -460,7 +460,7 @@ export default function MasjidDashboard() {
             />
         </div>
     );
-    
+
 
     return (
         <div className="min-h-screen bg-orange-50">

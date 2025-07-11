@@ -72,7 +72,7 @@ const AboutPage = () => {
     }
 
     return (
-        
+
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
 

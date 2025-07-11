@@ -23,7 +23,7 @@ router.put("/:id", updateMasjidInfo);
 router.put("/:id/times", updateMasjidTimes);
 
 //to list earliest namaz time
-router.get("/namazearliest", getEarliestTime)
+router.get("/earliestnamaz", getEarliestTime)
 
 // //Announcement routes
 router.post("/:id/addannouncements", updateAnnouncement);

@@ -35,9 +35,9 @@ const MasjidListPage = () => {
         setTimeout(() => {
             fetchMasjids();
         }, 1000);
-          
+
     }, []);
-    
+
     const listVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: (i) => ({
@@ -50,7 +50,7 @@ const MasjidListPage = () => {
             }
         }),
     };
-      
+
     const toggleFavorite = (id) => {
         let updatedFavorites;
         if (favorites.includes(id)) {
@@ -86,7 +86,7 @@ const MasjidListPage = () => {
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
 
-            <div className="flex-1 px-4 py-6">
+            <div className="flex-1 px-4 py-6 mb-25">
                 <h1 className="text-2xl ml-2 font-bold text-black mb-8 poppins">Masjids in Vaniyambadi</h1>
 
                 {/* Search Bar */}
@@ -111,45 +111,45 @@ const MasjidListPage = () => {
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     </div>
                 ) : (
-                        <AnimatePresence>
-                            {filteredMasjids.map((masjid, index) => (
-                                <motion.div
-                                    key={masjid.id}
-                                    className="bg-[#ffde59] p-4 rounded-2xl mb-4 flex items-center justify-between dm-sans cursor-pointer"
-                                    onClick={() => goToMasjidTiming(masjid.id)}
-                                    variants={listVariants}
-                                    initial="hidden"
-                                    animate="visible"
-                                    custom={index}
-                                    exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
+                    <AnimatePresence>
+                        {filteredMasjids.map((masjid, index) => (
+                            <motion.div
+                                key={masjid.id}
+                                className="bg-[#ffde59] p-4 rounded-2xl mb-4 flex items-center justify-between dm-sans cursor-pointer"
+                                onClick={() => goToMasjidTiming(masjid.id)}
+                                variants={listVariants}
+                                initial="hidden"
+                                animate="visible"
+                                custom={index}
+                                exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 flex items-center justify-center">
+                                        <img src="/Masjid_list_logo.png" alt="masjid" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-black">{masjid.name}</h3>
+                                        <p className="text-sm text-black">
+                                            {masjid.address}, {masjid.town}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    className="w-6 h-6 flex items-center justify-center"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleFavorite(masjid.id);
+                                    }}
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-12 h-12 flex items-center justify-center">
-                                            <img src="/Masjid_list_logo.png" alt="masjid" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-black">{masjid.name}</h3>
-                                            <p className="text-sm text-black">
-                                                {masjid.address}, {masjid.town}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div
-                                        className="w-6 h-6 flex items-center justify-center"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleFavorite(masjid.id);
-                                        }}
-                                    >
-                                        <Star
-                                            className={favorites.includes(masjid.id)
-                                                ? "text-[#f04760] fill-[#f04760]"
-                                                : "text-gray-600"}
-                                        />
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
+                                    <Star
+                                        className={favorites.includes(masjid.id)
+                                            ? "text-[#f04760] fill-[#f04760]"
+                                            : "text-gray-600"}
+                                    />
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
 
                 )}
             </div>

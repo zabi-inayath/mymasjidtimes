@@ -85,7 +85,7 @@ const HomePage = () => {
     useEffect(() => {
         const fetchMasjids = async () => {
             try {
-                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/namazearliest`);
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/masjid/earliestnamaz`);
                 setMasjids(res.data || []);
             } catch (error) {
                 console.error('Failed to load masjid list', error);
@@ -97,7 +97,7 @@ const HomePage = () => {
         setTimeout(() => {
             fetchMasjids();
         }, 500);
-          
+
     }, []);
 
     const prayerFieldMap = {
@@ -189,7 +189,7 @@ const HomePage = () => {
                                         {masjid.name}
                                     </span>
                                     <div className="flex items-center gap-2 poppins">
-                                        <span className="text-black font-bold"> 
+                                        <span className="text-black font-bold">
                                             - {masjid.time}
                                         </span>
                                         <ChevronRight />

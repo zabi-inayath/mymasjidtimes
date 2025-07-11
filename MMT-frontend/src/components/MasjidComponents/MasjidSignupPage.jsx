@@ -50,7 +50,7 @@ export default function MasjidSignupPage() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    
+
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
