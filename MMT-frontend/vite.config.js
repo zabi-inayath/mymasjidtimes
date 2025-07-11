@@ -12,7 +12,7 @@ export default defineConfig({
       name: 'myMasjidTimes',
       short_name: 'MasjidTimes',
       description: 'myMasjidTimes is a non-profit web app for accurate salah times, iqamah schedules, and masjid updates.',
-      start_url: '/',
+      start_url: '/home',
       display: 'standalone',
       background_color: '#ffffff',
       theme_color: '#fef9ef',
