@@ -37,21 +37,20 @@ export default function MasjidSignupPage() {
                 'Password must be at least 8 characters, include 1 uppercase, 1 lowercase, 1 number and 1 special character.';
         }
 
-        // Email validation
-        if (
-            !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(form.adminEmail)
-        ) {
+        // Optional Email validation (only if filled)
+        if (form.adminEmail && !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(form.adminEmail)) {
             newErrors.adminEmail = 'Enter a valid email address.';
         }
 
-        // Phone validation
-        if (!/^\d{10}$/.test(form.adminPhone)) {
+        // Optional Phone validation (only if filled)
+        if (form.adminPhone && !/^\d{10}$/.test(form.adminPhone)) {
             newErrors.adminPhone = 'Phone must be exactly 10 digits.';
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+    
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -174,7 +173,7 @@ export default function MasjidSignupPage() {
                         </div>
                         <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
-                                Email:
+                                Email (optional):
                             </label>
                             <input
                                 type="email"
@@ -190,7 +189,7 @@ export default function MasjidSignupPage() {
                         </div>
                         <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
-                                Phone:
+                                Phone (optional):
                             </label>
                             <input
                                 type="text"

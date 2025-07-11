@@ -101,7 +101,7 @@ export default function PrayerTimesPage() {
             <div className="px-4 pb-6 max-w-md mx-auto bg-[#fef9ef]">
 
                 {/* Back Button */}
-                <div className="text-left absolute cursor-pointer" onClick={() => navigate('/home')}>
+                <div className="text-left absolute cursor-pointer" onClick={() => navigate(-1)}>
                     <button
                         className="p-2 rounded-full absolute top-6 transition-colors bg-yellow-500 hover:bg-yellow-600 shadow m"
                     >

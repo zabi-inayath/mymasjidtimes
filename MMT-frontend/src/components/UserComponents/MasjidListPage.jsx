@@ -4,6 +4,8 @@ import { Star, Search } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ThreeDot } from 'react-loading-indicators';
+import { motion, AnimatePresence } from 'framer-motion';
+
 
 const MasjidListPage = () => {
     const [masjids, setMasjids] = useState([]);
@@ -32,10 +34,23 @@ const MasjidListPage = () => {
 
         setTimeout(() => {
             fetchMasjids();
-        }, 2000);
+        }, 1000);
           
     }, []);
-
+    
+    const listVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: i * 0.05, // stagger effect
+                duration: 0.4,
+                ease: "easeOut"
+            }
+        }),
+    };
+      
     const toggleFavorite = (id) => {
         let updatedFavorites;
         if (favorites.includes(id)) {
@@ -79,7 +94,7 @@ const MasjidListPage = () => {
                     <Search className="absolute left-3 top-3 text-gray-500" size={20} />
                     <input
                         type="text"
-                        placeholder="Search for masjid by name"
+                        placeholder="Search for masjid by name or area"
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className="
@@ -96,13 +111,17 @@ const MasjidListPage = () => {
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     </div>
                 ) : (
-                    <div className="space-y-4 mb-30">
-                        {filteredMasjids.length > 0 ? (
-                            filteredMasjids.map((masjid) => (
-                                <div
+                        <AnimatePresence>
+                            {filteredMasjids.map((masjid, index) => (
+                                <motion.div
                                     key={masjid.id}
-                                    className="bg-[#ffde59] p-4 rounded-2xl flex items-center justify-between dm-sans cursor-pointer"
+                                    className="bg-[#ffde59] p-4 rounded-2xl mb-4 flex items-center justify-between dm-sans cursor-pointer"
                                     onClick={() => goToMasjidTiming(masjid.id)}
+                                    variants={listVariants}
+                                    initial="hidden"
+                                    animate="visible"
+                                    custom={index}
+                                    exit={{ opacity: 0, y: 20, transition: { duration: 0.3 } }}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="w-12 h-12 flex items-center justify-center">
@@ -128,12 +147,10 @@ const MasjidListPage = () => {
                                                 : "text-gray-600"}
                                         />
                                     </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-center text-gray-700 mt-10">No masjids found.</p>
-                        )}
-                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+
                 )}
             </div>
         </div>

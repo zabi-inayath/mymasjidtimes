@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ThreeDot } from 'react-loading-indicators';
 
+
 // Memoized EditView component
 const EditView = memo(({
     prayerTimes,
@@ -92,6 +93,13 @@ export default function MasjidDashboard() {
     const [prayerTimes, setPrayerTimes] = useState([]);
     const [lastUpdate, setLastUpdate] = useState('');
     const [loading, setLoading] = useState(true);
+    const [masjidInfo, setMasjidInfo] = useState({
+        name: '',
+        address: '',
+        town: '',
+        adminEmail: '',
+        adminPhone: '',
+    });
 
     const validateAuth = useCallback(async () => {
         const masjidId = localStorage.getItem("masjidID");
@@ -138,6 +146,13 @@ export default function MasjidDashboard() {
 
             const masjid = res.data;
             setMasjidName(masjid.name);
+            setMasjidInfo({
+                name: masjid.name || '',
+                address: masjid.address || '',
+                town: masjid.town || '',
+                adminEmail: masjid.adminEmail || '',
+                adminPhone: masjid.adminPhone || '',
+            });            
 
             const updatedPrayerTimes = [
                 { name: "Fajr", azaan: convertTo24Hour(masjid.fajr), iqamath: convertTo24Hour(masjid.fajrIqamath) },
@@ -159,6 +174,33 @@ export default function MasjidDashboard() {
             toast.error("Failed to load masjid data");
         }
     }, [navigate]);
+
+    const handleMasjidInfoChange = (e) => {
+        const { name, value } = e.target;
+        setMasjidInfo(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleMasjidInfoSave = async () => {
+        const masjidId = localStorage.getItem("masjidID");
+        const token = localStorage.getItem("masjidToken");
+
+        try {
+            await axios.put(
+                `${import.meta.env.VITE_BACKEND_URL}/api/masjid/${masjidId}`,
+                masjidInfo,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success("Masjid info updated!");
+            setCurrentView("home");
+            fetchMasjidData(); // Refresh data
+        } catch (err) {
+            toast.error("Error updating masjid info");
+        }
+    };
+    
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem("masjidID");
@@ -381,6 +423,45 @@ export default function MasjidDashboard() {
         </div>
     );
 
+    const MasjidInfoView = ({
+        masjidInfo,
+        onFieldChange,
+        onSaveInfo
+    }) => {
+        return (
+            <div className="max-w-md mx-auto px-4 py-8 mb-30">
+                <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 poppins">Masjid Info</h1>
+                <div className="space-y-4">
+                    <InputField label="Masjid Name" name="name" value={masjidInfo.name} onChange={onFieldChange} />
+                    <InputField label="Address" name="address" value={masjidInfo.address} onChange={onFieldChange} />
+                    <InputField label="City" name="town" value={masjidInfo.town} onChange={onFieldChange} />
+                    <InputField label="Email" name="adminEmail" value={masjidInfo.adminEmail} onChange={onFieldChange} />
+                    <InputField label="Phone" name="adminPhone" value={masjidInfo.adminPhone} onChange={onFieldChange} />
+                    <button
+                        onClick={onSaveInfo}
+                        className="dm-sans w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-3 rounded-full mt-4 transition-colors"
+                    >
+                        SAVE
+                    </button>
+                </div>
+            </div>
+        )
+    };
+
+    const InputField = ({ label, name, value, onChange }) => (
+        <div>
+            <label className="block poppins text-sm font-medium text-gray-700 mb-2">{label}:</label>
+            <input
+                type="text"
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="w-full px-4 py-3 bg-yellow-400 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600"
+            />
+        </div>
+    );
+    
+
     return (
         <div className="min-h-screen bg-orange-50">
             <header className="bg-white shadow-sm">
@@ -418,9 +499,8 @@ export default function MasjidDashboard() {
                     </button>
                 </div>
             </header>
-            {currentView === 'home' ? (
-                <HomeView />
-            ) : (
+            {currentView === 'home' && <HomeView />}
+            {currentView === 'edit' && (
                 <EditView
                     prayerTimes={prayerTimes}
                     notice={notice}
@@ -428,6 +508,13 @@ export default function MasjidDashboard() {
                     onUpdateTimes={handleUpdateTimes}
                     onNoticeChange={handleNoticeChange}
                     onNoticeAction={handleNoticeAction}
+                />
+            )}
+            {currentView === 'info' && (
+                <MasjidInfoView
+                    masjidInfo={masjidInfo}
+                    onFieldChange={handleMasjidInfoChange}
+                    onSaveInfo={handleMasjidInfoSave}
                 />
             )}
             <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2">
@@ -444,8 +531,15 @@ export default function MasjidDashboard() {
                     >
                         <Edit3 size={24} className="text-gray-800" />
                     </button>
+                    <button
+                        onClick={() => setCurrentView('info')}
+                        className={`p-2 rounded-full transition-colors ${currentView === 'info' ? 'bg-yellow-500' : 'hover:bg-yellow-500'}`}
+                    >
+                        <span className="text-gray-800 font-bold">i</span>
+                    </button>
                 </div>
             </div>
+
         </div>
     );
 }

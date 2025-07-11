@@ -35,13 +35,11 @@ const BottomNav = () => {
                     >
                         <div
                             className={`
-                                flex flex-col items-center justify-center
-                                w-12 h-14
+                                flex flex-col items-center font-bold justify-center
+                                w-10 h-12
                                 rounded-full
                                 transition-colors
-                                ${activeKey === item.key
-                                    ? 'font-extrabold'
-                                    : 'hover:bg-yellow-500'}
+                                
                             `}
                         >
                             {item.icon}

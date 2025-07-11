@@ -96,7 +96,7 @@ const HomePage = () => {
 
         setTimeout(() => {
             fetchMasjids();
-        }, 1000);
+        }, 500);
           
     }, []);
 
