@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
@@ -18,9 +18,64 @@ import AboutPage from './components/UserComponents/AboutPage';
 import DeveloperPage from './components/DeveloperPage';
 
 function App() {
+  // ----------- NEW: PWA install prompt handling ----------
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent automatic prompt
+      e.preventDefault();
+
+      // Save the event for later use
+      setDeferredPrompt(e);
+
+      // Show the install button
+      setShowInstallButton(true);
+    });
+  }, []);
+
+  const handleInstall = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted install prompt');
+        } else {
+          console.log('User dismissed install prompt');
+        }
+
+        setDeferredPrompt(null);
+        setShowInstallButton(false);
+      });
+    }
+  };
+  // --------------------------------------------------------
+
   return (
     <Router>
       <div className="App">
+        {/* Optional: place the install button anywhere you like */}
+        {showInstallButton && (
+          <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}>
+            <button
+              onClick={handleInstall}
+              style={{
+                backgroundColor: '#2196f3',
+                color: '#fff',
+                border: 'none',
+                padding: '10px 16px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+              }}
+            >
+              Install myMasjidTimes
+            </button>
+          </div>
+        )}
+
         <Routes>
           {/* Masjid routes */}
           <Route path="/masjid/login" element={<MasjidLoginPage />} />
@@ -41,10 +96,9 @@ function App() {
           <Route path="/app/developer" element={<DeveloperPage />} />
 
           {/* 404 - Not found route */}
-          <Route path="*" element={
-            <Navigate to="/home" replace />
-          } />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
+
         <Toaster position="top-center" reverseOrder={true} />
       </div>
     </Router>
