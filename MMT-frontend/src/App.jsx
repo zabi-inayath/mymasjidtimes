@@ -56,26 +56,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Optional: place the install button anywhere you like */}
-        {showInstallButton && (
-          <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}>
-            <button
-              onClick={handleInstall}
-              style={{
-                backgroundColor: '#2196f3',
-                color: '#fff',
-                border: 'none',
-                padding: '10px 16px',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '16px',
-              }}
-            >
-              Install myMasjidTimes
-            </button>
-          </div>
-        )}
-
+        
         <Routes>
           {/* Masjid routes */}
           <Route path="/masjid/login" element={<MasjidLoginPage />} />

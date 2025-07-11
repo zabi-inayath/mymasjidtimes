@@ -5,6 +5,8 @@ import moment from 'moment-hijri';
 import axios from 'axios';
 import { ThreeDot } from 'react-loading-indicators';
 import { useNavigate } from 'react-router-dom';
+import useInstallPrompt from '../../hooks/useInstallPrompt';
+
 
 const HomePage = () => {
     const [hijriDate, setHijriDate] = useState('');
@@ -13,6 +15,8 @@ const HomePage = () => {
     const [nextPrayerTime, setNextPrayerTime] = useState('');
     const [masjids, setMasjids] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { isInstallable, promptInstall, dismissInstall } = useInstallPrompt();
+
 
     const navigate = useNavigate();
 
@@ -142,6 +146,28 @@ const HomePage = () => {
     return (
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
+            {isInstallable && (
+                <div className="fixed top-6 left-1/2 transform -translate-x-1/2 bg-yellow-400 px-6 py-4 rounded-2xl shadow-lg border border-yellow-300 flex items-center justify-between gap-4 z-50 w-fit league-spartan">
+                    <span className="text-black text-lg font-semibold hagrid">
+                        myMasjidTimes
+                    </span>
+                    <button
+                        onClick={promptInstall}
+                        className="bg-black hover:bg-yellow-600 dm-sans text-white text-lg px-4 py-2 rounded-xl transition-colors duration-300"
+                    >
+                        Install
+                    </button>
+                    <button
+                        onClick={dismissInstall}
+                        className="text-black hover:text-yellow-600 text-xl leading-none ml-2 mt-2"
+                    >
+                        &times;
+                    </button>
+                </div>
+            )}
+
+
+
 
             <div className="flex-1 px-4 py-6">
                 <h1 className="text-3xl text-black mb-4 ml-2 league-spartan">Salam, Akhi</h1>

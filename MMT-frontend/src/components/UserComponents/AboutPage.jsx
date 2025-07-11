@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import { CodeXml } from 'lucide-react';
 import { ThreeDot } from 'react-loading-indicators';
-import { redirect } from 'react-router-dom';
+import useInstallPrompt from '../../hooks/useInstallPrompt';
+
 
 const AboutPage = () => {
     const [loading, setLoading] = useState(true);
     const [language, setLanguage] = useState('en');
+    const { isInstallable, promptInstall } = useInstallPrompt();
+
 
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 1500);
@@ -94,6 +97,20 @@ const AboutPage = () => {
                 <h1 className="text-3xl font-bold text-black mb-8 ml-2 poppins">
                     {t.about} <span className='hagrid text-2xl'>{t.appName}</span>
                 </h1>
+
+                {isInstallable && (
+                    <div className="bg-yellow-400 px-6 py-4 rounded-2xl shadow-lg border border-yellow-300 flex items-center justify-center gap-4 z-50 w-fit league-spartan">
+                        <span className="text-black text-lg font-semibold hagrid">
+                            myMasjidTimes
+                        </span>
+                        <button
+                            onClick={promptInstall}
+                            className="bg-black hover:bg-yellow-600 dm-sans text-white text-lg px-4 py-2 rounded-xl transition-colors duration-300"
+                        >
+                            Install
+                        </button>
+                    </div>
+                )}
 
                 <div className="bg-yellow-200 p-6 rounded-2xl mb-8 text-left dm-sans font-medium">
                     <p className="text-black leading-relaxed">
