@@ -98,26 +98,28 @@ const AboutPage = () => {
                 </h1>
 
                 {isInstallable && (
-                    <div className="bg-[#ffde59] px-6 py-4 mb-4 rounded-2xl shadow-lg border border-yellow-300 flex items-center justify-center gap-4 league-spartan">
-                        <div>
-                            <img src='/myMasjidTimes_Logo.png' className='w-12 h-12 bg-[#fef9ef] rounded-3xl' />
+                    <div className="bg-[#ffde59] px-4 py-3 mb-4 rounded-2xl shadow-lg border border-yellow-300 flex flex-col sm:flex-row items-center justify-between gap-4 league-spartan">
+                        <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-full overflow-hidden bg-[#fef9ef] flex items-center justify-center">
+                                <img
+                                    src="/myMasjidTimes_Logo.png"
+                                    alt="myMasjidTimes Logo"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <span className="text-black text-lg font-semibold hagrid">
+                                myMasjidTimes
+                            </span>
                         </div>
-                        <span className="text-black text-lg font-semibold hagrid">
-                            myMasjidTimes
-                        </span>
                         <button
                             onClick={promptInstall}
-                            className="bg-black hover:bg-yellow-600 dm-sans text-white text-lg px-4 py-2 rounded-xl transition-colors duration-300"
+                            className="bg-black hover:bg-yellow-600 dm-sans text-white text-base sm:text-lg px-4 py-2 rounded-xl transition-colors duration-300 w-full sm:w-auto"
                         >
-                            Install
-                        </button>
-                        <button
-                            onClick={dismissInstall}
-                            className="text-black hover:text-yellow-600 text-xl leading-none ml-2 mt-2"
-                        >
-                            &times;
+                            Install App
                         </button>
                     </div>
+     
+
                 )}
 
                 <div className="bg-[#ffde59] p-6 rounded-2xl mb-8 text-left dm-sans font-medium">
