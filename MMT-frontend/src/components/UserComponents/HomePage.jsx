@@ -204,25 +204,28 @@ const HomePage = () => {
                             <ThreeDot variant="bounce" color="orange" size="small" />
                         </div>
                     ) : masjidsForCurrentPrayer.length > 0 ? (
-                        <div className="space-y-1">
-                            {masjidsForCurrentPrayer.map((masjid, index) => (
-                                <div
-                                    key={index}
-                                    className="flex justify-between items-center text-lg cursor-pointer hover:bg-yellow-500 px-3 rounded-full"
-                                    onClick={() => handleClick(masjid.id)}
-                                >
-                                    <span className="text-black font-medium poppins p-1">
-                                        {masjid.name}
-                                    </span>
-                                    <div className="flex items-center gap-2 poppins">
-                                        <span className="text-black font-bold">
-                                            - {masjid.time}
+                            <div className="space-y-1">
+                                {masjidsForCurrentPrayer.map((masjid, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex justify-between items-center text-lg cursor-pointer hover:bg-yellow-500 px-3 rounded-full"
+                                        onClick={() => handleClick(masjid.id)}
+                                    >
+                                        <span className="text-black font-medium poppins p-1">
+                                            {masjid.name.length > 17
+                                                ? masjid.name.slice(0, 17) + "..."
+                                                : masjid.name}
                                         </span>
-                                        <ChevronRight />
+                                        <div className="flex items-center gap-2 poppins">
+                                            <span className="text-black font-bold">
+                                                - {masjid.time}
+                                            </span>
+                                            <ChevronRight />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+
                     ) : (
                         <p className="text-gray-700 text-center">
                             No masjid timings available for {displayedPrayer}.

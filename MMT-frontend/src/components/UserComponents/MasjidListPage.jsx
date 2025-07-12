@@ -82,6 +82,11 @@ const MasjidListPage = () => {
         setFilteredMasjids(filtered);
     };
 
+    const sortedMasjids = [...filteredMasjids].sort((a, b) =>
+        a.name.localeCompare(b.name)
+    );
+
+
     return (
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
             <Header />
@@ -112,7 +117,7 @@ const MasjidListPage = () => {
                     </div>
                 ) : (
                     <AnimatePresence>
-                        {filteredMasjids.map((masjid, index) => (
+                        {sortedMasjids.map((masjid, index) => (
                             <motion.div
                                 key={masjid.id}
                                 className="bg-[#ffde59] p-4 rounded-2xl mb-4 flex items-center justify-between dm-sans cursor-pointer"
@@ -142,9 +147,11 @@ const MasjidListPage = () => {
                                     }}
                                 >
                                     <Star
-                                        className={favorites.includes(masjid.id)
-                                            ? "text-[#f04760] fill-[#f04760]"
-                                            : "text-gray-600"}
+                                        className={
+                                            favorites.includes(masjid.id)
+                                                ? "text-[#f04760] fill-[#f04760]"
+                                                : "text-gray-600"
+                                        }
                                     />
                                 </div>
                             </motion.div>
