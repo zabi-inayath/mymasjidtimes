@@ -170,7 +170,7 @@ const AboutPage = () => {
                         <div className="space-y-2 mb-6">
                             <p className="text-black text-lg dm-sans">
                                 <i class="fa-solid fa-envelope"></i>
-                                <a href="mailto:mymasjidtimes@gmail.com" className="text-blue-700 hover:underline ml-2">
+                                <a href="mailto:mymasjidtimes@gmail.com" className="text-black underline ml-2">
                                     mymasjidtimes@gmail.com
                                 </a>
                             </p>
@@ -189,7 +189,7 @@ const AboutPage = () => {
                                     '_blank'
                                 )
                             }
-                            className="bg-gray-600 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full dm-sans transition-colors duration-300 w-full sm:w-auto"
+                            className="bg-gray-600 hover:bg-black text-white font-semibold py-3 px-6 rounded-full dm-sans transition-colors duration-300 w-full sm:w-auto"
                         >
                             Contact via WhatsApp
                         </button>

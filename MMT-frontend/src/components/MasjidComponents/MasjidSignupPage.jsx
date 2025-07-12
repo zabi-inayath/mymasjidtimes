@@ -115,7 +115,7 @@ export default function MasjidSignupPage() {
                     <h2 className="text-xl poppins font-semibold text-gray-800 text-center mb-8">
                         Masjid SignUp
                     </h2>
-                    <div className="space-y-6">
+                    <div className="space-y-6 mb-30">
                         <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
                                 Masjid ID:
@@ -171,7 +171,7 @@ export default function MasjidSignupPage() {
                                 placeholder="City"
                             />
                         </div>
-                        <div>
+                        {/* <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
                                 Email (optional):
                             </label>
@@ -186,7 +186,7 @@ export default function MasjidSignupPage() {
                             {errors.adminEmail && (
                                 <div className="text-red-600 text-xs mt-1">{errors.adminEmail}</div>
                             )}
-                        </div>
+                        </div> */}
                         <div>
                             <label className="block poppins text-sm font-medium text-gray-700 mb-2">
                                 Phone (optional):
@@ -214,7 +214,7 @@ export default function MasjidSignupPage() {
                                 value={form.adminUsername}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 bg-yellow-400 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600"
-                                placeholder="User ID (lowercase)"
+                                placeholder="e.g. mmtmasjidname"
                                 maxLength={15}
                             />
                             {errors.adminUsername && (
