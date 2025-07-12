@@ -161,13 +161,46 @@ const AboutPage = () => {
                     <h2 className="text-3xl text-left font-bold text-black mb-8 ml-2 poppins">{t.contact}</h2>
 
                     <div className="bg-[#ffde59] p-6 rounded-2xl mb-8">
+                        <h2 className="text-2xl text-black font-bold mb-4 dm-sans">Facing any issue?</h2>
+
+                        <p className="text-black text-lg mb-4 dm-sans">
+                            If you notice any mistake in Masjid timings or have issues using the app, please reach out to us:
+                        </p>
+
+                        <div className="space-y-2 mb-6">
+                            <p className="text-black text-lg dm-sans">
+                                <i class="fa-solid fa-envelope"></i>
+                                <a href="mailto:mymasjidtimes@gmail.com" className="text-blue-700 hover:underline ml-2">
+                                    mymasjidtimes@gmail.com
+                                </a>
+                            </p>
+                            {/* <p className="text-black text-lg dm-sans">
+                                Phone:
+                                <a href="tel:+919876543210" className="text-blue-700 hover:underline ml-2">
+                                    +91 98765 43210
+                                </a>
+                            </p> */}
+                        </div>
+
+                        <button
+                            onClick={() =>
+                                window.open(
+                                    'https://wa.me/917448552778?text=Assalamu%20Alaikum!%20I%20have%20a%20query%20regarding%20myMasjidTimes.',
+                                    '_blank'
+                                )
+                            }
+                            className="bg-gray-600 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full dm-sans transition-colors duration-300 w-full sm:w-auto"
+                        >
+                            Contact via WhatsApp
+                        </button>
+                    </div>
+
+
+                    <div className="bg-[#ffde59] p-6 rounded-2xl mb-8">
                         <p className="text-black text-left text-2xl dm-sans leading-relaxed">
                             {t.feedback}
                         </p>
                         <br />
-                        <p className="text-black text-left text-xl dm-sans text-center leading-relaxed">
-                            {t.email}
-                        </p>
 
                         <form className="mt-6 space-y-4">
                             <input

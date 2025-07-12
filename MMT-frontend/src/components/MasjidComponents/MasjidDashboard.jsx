@@ -432,7 +432,13 @@ export default function MasjidDashboard() {
             <div className="max-w-md mx-auto px-4 py-8 mb-30">
                 <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 poppins">Masjid Info</h1>
                 <div className="space-y-4">
-                    <InputField label="Masjid Name" name="name" value={masjidInfo.name} onChange={onFieldChange} />
+                    <InputField
+                        label="Masjid Name"
+                        name="name"
+                        value={masjidInfo.name}
+                        onChange={onFieldChange}
+                        disabled={true}
+                    />
                     <InputField label="Address" name="address" value={masjidInfo.address} onChange={onFieldChange} />
                     <InputField label="City" name="town" value={masjidInfo.town} onChange={onFieldChange} />
                     <InputField label="Email" name="adminEmail" value={masjidInfo.adminEmail} onChange={onFieldChange} />
@@ -444,22 +450,28 @@ export default function MasjidDashboard() {
                         SAVE
                     </button>
                 </div>
+
             </div>
         )
     };
 
-    const InputField = ({ label, name, value, onChange }) => (
+    const InputField = ({ label, name, value, onChange, disabled }) => (
         <div>
-            <label className="block poppins text-sm font-medium text-gray-700 mb-2">{label}:</label>
+            <label className="block poppins text-sm font-medium text-gray-700 mb-2">
+                {label}:
+            </label>
             <input
                 type="text"
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full px-4 py-3 bg-yellow-400 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600"
+                disabled={disabled}
+                className={`w-full px-4 py-3 rounded-md border-0 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-800 placeholder-gray-600 
+        ${disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-400'}`}
             />
         </div>
     );
+
 
 
     return (

@@ -16,7 +16,7 @@ const HomePage = () => {
     const [masjids, setMasjids] = useState([]);
     const [loading, setLoading] = useState(true);
     const { isInstallable, promptInstall, dismissInstall } = useInstallPrompt();
-
+    const [totalViews, setTotalViews] = useState(null);
 
     const navigate = useNavigate();
 
@@ -104,6 +104,7 @@ const HomePage = () => {
 
     }, []);
 
+
     const prayerFieldMap = {
         Fajr: 'fajrIqamath',
         Zohar: 'zuharIqamath',
@@ -157,6 +158,24 @@ const HomePage = () => {
     const handleClick = (id) => {
         navigate(`/masjid-timing/${id}`);
     };
+
+
+    useEffect(() => {
+        const timer = setTimeout(() => setLoading(false), 1500);
+
+        const incrementViews = async () => {
+            try {
+                const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/views/increment`);
+                setTotalViews(res.data.total_views);
+            } catch (error) {
+                console.error('Failed to fetch views:', error);
+            }
+        };
+
+        incrementViews();
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <div className="min-h-screen bg-[#fef9ef] flex flex-col">
@@ -213,7 +232,7 @@ const HomePage = () => {
                    Find next {displayedPrayer} jamath
                 </h3>
 
-                <div className="bg-[#ffde59] py-4 px-2 rounded-2xl mb-40">
+                <div className="bg-[#ffde59] py-4 px-2 rounded-2xl mb-10">
                     {loading ? (
                         <div className="flex justify-center mt-10">
                             <ThreeDot variant="bounce" color="orange" size="small" />
@@ -247,8 +266,21 @@ const HomePage = () => {
                         </p>
                     )}
                 </div>
+                <div className='mb-30'>
+                    {totalViews !== null && (
+                        <div className="mb-8 text-center flex flex-row sm:flex-row justify-center items-center gap-3 ">
+                            <span className="text-black text-sm font-semibold poppins">
+                                Website Views:
+                            </span>
+                            <span className="text-black text-lg font-bold dm-sans">
+                                {totalViews.toLocaleString()}
+                            </span>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
+        
     );
 };
 

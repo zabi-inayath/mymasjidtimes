@@ -4,6 +4,7 @@ import Header from './Header';
 import axios from 'axios';
 import { ArrowLeft } from 'lucide-react';
 import { ThreeDot } from 'react-loading-indicators';
+import { Info } from 'lucide-react';
 
 export default function PrayerTimesPage() {
     const { id } = useParams();
@@ -24,7 +25,6 @@ export default function PrayerTimesPage() {
         if (id) fetchMasjid();
     }, [id]);
 
-    // Use dynamic prayer times if available
     const prayerTimes = masjid ? [
         { name: 'Fajr', azaan: masjid.fajr, iqamath: masjid.fajrIqamath },
         { name: 'Zuhar', azaan: masjid.zuhar, iqamath: masjid.zuharIqamath },
@@ -34,7 +34,6 @@ export default function PrayerTimesPage() {
         { name: 'Jummah', azaan: masjid.jummah, iqamath: masjid.jummahIqamath }
     ] : [];
 
-    // Helper to convert time to 12-hour format
     function convertTo12Hour(timeStr) {
         if (!timeStr) return "-";
 
@@ -86,7 +85,6 @@ export default function PrayerTimesPage() {
         }
     };
 
-
     if (!masjid) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -97,9 +95,7 @@ export default function PrayerTimesPage() {
 
     return (
         <div className="min-h-screen bg-[#fef9ef]">
-            {/* <Header /> */}
             <div className="px-4 pb-6 max-w-md mx-auto bg-[#fef9ef]">
-
                 {/* Back Button */}
                 <div className="text-left absolute cursor-pointer" onClick={() => navigate(-1)}>
                     <button
@@ -146,14 +142,13 @@ export default function PrayerTimesPage() {
                                     </span>
                                 </div>
                             </div>
-
                         ))
-
                     ) : (
                         <ThreeDot variant="bounce" color="orange" size="small" />
                     )}
+
                     <div className="text-center text-lg text-gray-700 mt-6 dm-sans">
-                        Updated on: {formatDateTime(masjid.updatedAt)}
+                        <strong>Updated on:</strong> {formatDateTime(masjid.updatedAt)}
                     </div>
                 </div>
 
@@ -163,7 +158,7 @@ export default function PrayerTimesPage() {
 
                 {/* Announcements Section */}
                 {masjid.announcements ? (
-                    <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                    <div className="bg-yellow-300 rounded-4xl p-8 mb-8">
                         <div className="text-left">
                             <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
                                 {masjid.announcements}
@@ -171,7 +166,7 @@ export default function PrayerTimesPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-yellow-300 rounded-4xl p-8 mb-24">
+                    <div className="bg-yellow-300 rounded-4xl p-8 mb-8">
                         <div className="text-center">
                             <div className="text-lg font-medium text-gray-800 mb-8 dm-sans whitespace-pre-line">
                                 No Notice/Announcement
@@ -179,40 +174,13 @@ export default function PrayerTimesPage() {
                         </div>
                     </div>
                 )}
-
-                {/* <div className="text-center my-6">
-                    <h2 className="text-2xl font-bold text-gray-900 poppins">Address</h2>
-                </div> */}
-
-                {/* Masjid Details */}
-                {/* <div className="text-center">
-                    <div className='mb-10'>
-                        <h1 className="poppins text-lg font-semibold text-gray-900 pb-3">
-                            {masjid.name}
-                        </h1>
-                        <h1 className="dm-sans text-lg font-semibold text-gray-900">
-                            {masjid.address}
-                        </h1>
-                        <h1 className="dm-sans text-lg font-semibold text-gray-900 pb-2">
-                            {masjid.town}
-                        </h1>
-                    </div>
-                    <div> */}
-                {/* <button
-                    className="
-                                ml-2 mt-4
-                                bg-yellow-400
-                                hover:bg-yellow-500
-                                text-gray-900
-                                font-semibold
-                                py-2 px-4
-                                rounded-full
-                                shadow
-                                transition-colors duration-300
-                            "
-                >
-                    Get Directions
-                </button> */}
+                {/* Disclaimer Block */}
+                <div className="mt-4 p-4 rounded-2xl text-sm text-black dm-sans flex gap-2">
+                    <Info className="text-red-600" size={20} />
+                    <span>
+                        <strong>Disclaimer:</strong> The prayer times shown are maintained by respective masjid admins.<br></br> Please always check the <strong>“Updated on”</strong> time. <br></br>If times are not updated regularly, there could be differences in timings across masjids.
+                    </span>
+                </div>
             </div>
         </div>
     );

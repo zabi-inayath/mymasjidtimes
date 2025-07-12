@@ -1,8 +1,9 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const cors = require("cors"); // ← Add this line
+const cors = require("cors");
 const masjidRoutes = require("./routes/masjidRoutes");
 const developerRoutes = require("./routes/developerRoutes");
+const viewsRoutes = require('./routes/viewsRoutes.js');
 const connectDB = require("./config/db");
 const pool = require("./models/masjid");
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use("/api/masjid", masjidRoutes);
 app.use("/api/developer", developerRoutes);
+app.use("/api/views", viewsRoutes)
 
 app.get("/", (req, res) => {
     res.send("MMT's API is running!");
