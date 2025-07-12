@@ -1,6 +1,6 @@
 {
     "name": "myMasjidTimes",
-    "short_name": "MMT Masjid Login",
+    "short_name": "MMT Login",
     "start_url": "/masjid/login",
     "display": "standalone",
     "description": "myMasjidTimes is a non-profit web app for accurate salah times, iqamah schedules, and masjid updates.",
