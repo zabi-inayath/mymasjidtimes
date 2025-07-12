@@ -116,10 +116,11 @@ const HomePage = () => {
     let displayedPrayer = nextPrayer === 'Jummah' ? 'Jummah' : nextPrayer;
 
     let masjidsForCurrentPrayer = [];
+
     if (masjids.length > 0 && displayedPrayer) {
         const timeField = prayerFieldMap[displayedPrayer];
 
-        masjidsForCurrentPrayer = masjids
+        const masjidsData = masjids
             .filter((m) => m[timeField] && m[timeField] !== "00:00" && m[timeField] !== null)
             .map((m) => ({
                 id: m.id,
@@ -129,15 +130,29 @@ const HomePage = () => {
             .sort((a, b) => {
                 const toMinutes = (time) => {
                     if (time === "N/A") return Infinity;
-                    const [h, m] = time.match(/(\d+):(\d+) (\w+)/).slice(1);
+                    const [h, m, period] = time.match(/(\d+):(\d+) (\w+)/).slice(1);
                     let hour = parseInt(h, 10);
                     const minute = parseInt(m, 10);
+                    if (period === "PM" && hour !== 12) hour += 12;
+                    if (period === "AM" && hour === 12) hour = 0;
                     return hour * 60 + minute;
                 };
-
                 return toMinutes(a.time) - toMinutes(b.time);
             });
+
+        const grouped = {};
+        masjidsData.forEach((m) => {
+            if (!grouped[m.time]) {
+                grouped[m.time] = [];
+            }
+            if (grouped[m.time].length < 3) {
+                grouped[m.time].push(m);
+            }
+        });
+
+        masjidsForCurrentPrayer = Object.values(grouped).flat();
     }
+
 
     const handleClick = (id) => {
         navigate(`/masjid-timing/${id}`);
@@ -195,7 +210,7 @@ const HomePage = () => {
                 </div>
 
                 <h3 className="text-2xl text-black mb-4 ml-2 league-spartan">
-                    {displayedPrayer} in Vaniyambadi
+                   Find next {displayedPrayer} jamath
                 </h3>
 
                 <div className="bg-[#ffde59] py-4 px-2 rounded-2xl mb-40">
