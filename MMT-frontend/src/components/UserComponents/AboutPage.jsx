@@ -8,8 +8,7 @@ import useInstallPrompt from '../../hooks/useInstallPrompt';
 const AboutPage = () => {
     const [loading, setLoading] = useState(true);
     const [language, setLanguage] = useState('en');
-    const { isInstallable, promptInstall } = useInstallPrompt();
-
+    const { isInstallable, promptInstall, dismissInstall } = useInstallPrompt();
 
     useEffect(() => {
         const timer = setTimeout(() => setLoading(false), 1500);
@@ -99,7 +98,10 @@ const AboutPage = () => {
                 </h1>
 
                 {isInstallable && (
-                    <div className="bg-yellow-400 px-6 py-4 rounded-2xl shadow-lg border border-yellow-300 flex items-center justify-center gap-4 z-50 w-fit league-spartan">
+                    <div className="bg-[#ffde59] px-6 py-4 mb-4 rounded-2xl shadow-lg border border-yellow-300 flex items-center justify-center gap-4 league-spartan">
+                        <div>
+                            <img src='/myMasjidTimes_Logo.png' className='w-12 h-12 bg-[#fef9ef] rounded-3xl' />
+                        </div>
                         <span className="text-black text-lg font-semibold hagrid">
                             myMasjidTimes
                         </span>
@@ -109,10 +111,16 @@ const AboutPage = () => {
                         >
                             Install
                         </button>
+                        <button
+                            onClick={dismissInstall}
+                            className="text-black hover:text-yellow-600 text-xl leading-none ml-2 mt-2"
+                        >
+                            &times;
+                        </button>
                     </div>
                 )}
 
-                <div className="bg-yellow-200 p-6 rounded-2xl mb-8 text-left dm-sans font-medium">
+                <div className="bg-[#ffde59] p-6 rounded-2xl mb-8 text-left dm-sans font-medium">
                     <p className="text-black leading-relaxed">
                         <span className='hagrid text-lg font-semibold'>{t.appName}</span> {t.intro}
                         <br /><br />{t.features}
@@ -150,7 +158,7 @@ const AboutPage = () => {
 
                     <h2 className="text-3xl text-left font-bold text-black mb-8 ml-2 poppins">{t.contact}</h2>
 
-                    <div className="bg-yellow-200 p-6 rounded-2xl mb-8">
+                    <div className="bg-[#ffde59] p-6 rounded-2xl mb-8">
                         <p className="text-black text-left text-2xl dm-sans leading-relaxed">
                             {t.feedback}
                         </p>
@@ -177,7 +185,7 @@ const AboutPage = () => {
                             ></textarea>
                             <button
                                 type="submit"
-                                className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-xl transition-colors duration-300"
+                                className="w-full bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 rounded-xl transition-colors duration-300"
                             >
                                 {t.submit}
                             </button>

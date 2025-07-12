@@ -23,7 +23,7 @@ export default function useInstallPrompt() {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const choiceResult = await deferredPrompt.userChoice;
-            console.log('User choice', choiceResult);
+            // console.log('User choice', choiceResult);
             setDeferredPrompt(null);
             setIsInstallable(false);
         }
